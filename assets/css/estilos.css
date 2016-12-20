@@ -1,0 +1,45 @@
+.logo{	
+	width: 70%;
+}
+.glyphicon {
+    top: 0;
+}
+
+.caja_logo{
+	background-color: #325985;
+	color: #fff;
+	margin-top: 10%;
+	padding-bottom: 2%;	
+}
+
+#contenido{
+    width: 90%;
+}
+
+.panel_habitaciones{
+	width: 20%;
+	display:inline-table;
+}
+
+.panel_caja{
+	width: 50%;
+	display:inline-table;
+}
+
+.codigo_habitacion {
+	font-weight: bold;
+}
+
+.btn_add{
+	width: 20%;
+	float: right;
+	margin-bottom: 1px;
+}
+
+.people{
+	width: 13%;
+}
+
+#tabulador_reg_clientes{
+	margin-bottom: 0px;
+}
