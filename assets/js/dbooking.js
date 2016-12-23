@@ -427,7 +427,6 @@ $(document).on("click","#edita_tipo",function(e){
 $(document).on("click", "#edit_conf_habitacion", function(){
   var objeto = $(this).parents().get(1);
   var id_tipo = $(objeto).attr('id');
-  console.log(id_tipo);
 });
 
 /******* End To Do **********/
@@ -466,7 +465,6 @@ $(document).on('click','#btn_chk_in_out',function(){
     $('.modal-title').data('codhab', codigo);
     $('.modal-body').load('vista_checkout', {data: codigo});
     $('#save_chk_in_out').data('chkinout','chkout');
-    //$('.modal-footer').append('<button type="button" class="btn btn-default" data-dismiss="modal">Sucio</button>');
   } else if (tipo == 'Habilitar') {
     $('.modal-title').text('Habitación: '+codigo);
     $('.modal-title').data('codhab', codigo);
@@ -476,87 +474,108 @@ $(document).on('click','#btn_chk_in_out',function(){
   };
 });
 
-/********
+/***************************************************
 *
+* Author: Jorge Anibal Zapata Agreda
 * Des: Boton de Guardado para check in o Check out
 *
-*********/
+***************************************************/
 $(document).on('click','#save_chk_in_out',function(e){
   e.preventDefault();
   var tipo = $('#save_chk_in_out').data('chkinout');
   switch (tipo) {
     case 'chkin':
-      var objeto = new Object();
-      objeto.cod_hab = $('.modal-title').data('codhab');
-      objeto.fecha_checkin = $('#fecha_checkin').val();
-      objeto.hora_checkin = $('#hora_checkin').val();
-      objeto.ci_passport = $('#ci_passport').val();
-      objeto.nombre_apell = $('#nombre_apell').val();
-      objeto.num_personas = $('#num_personas').val();
-      objeto.desayuno = $('#desayuno').prop('checked');
-      objeto.adelanto = $('#adelanto').val();
-      objeto.observaciones = $('#observaciones').val();
-      var datos = JSON.stringify(objeto);
-      $.ajax({
-        url: 'guarda_asignacion',
-        data: {data: datos},
-        type: "POST",
-        dataType: "html",
-        error: function()
-        {
-            alert('Error al guardar la Asignación!');
-        },
-        success: function(response)
-        {
-          // console.log(response);
-          $('body').removeClass('modal-open');
-          $('.modal-backdrop').remove();
-          $('#contenido').load('asignar_habitaciones');
-        }
-      });
-      break;
+        var datos_habitacion = new Array();
+        var lista_habitacion = new Array();
+        var lista_clientes = new Array();
+
+        var habitacion = new Object();
+        var cliente = new Object();
+
+        habitacion.cod_hab = $('.modal-title').data('codhab');
+        habitacion.fecha_checkin = $('#fecha_checkin').val();
+        habitacion.hora_checkin = $('#hora_checkin').val();
+        habitacion.desayuno = $('#desayuno').prop('checked');
+        habitacion.adelanto = $('#adelanto').val();
+        habitacion.observaciones = $('#observaciones').val();
+        lista_habitacion.push(habitacion);
+        $( ".collapse").each(function(){ 
+          cliente.nit_cliente = $(this).find('#ci_passport').val();
+          cliente.rsocial = $(this).find('#nombre_apell').val();
+          cliente.nacionalidad = $(this).find('#nacionalidad').val();
+          cliente.ciudad = $(this).find('#ciudad').val();
+          cliente.direccion = $(this).find('#direccion').val();
+          lista_clientes.push(JSON.stringify(cliente));
+        });
+        datos_habitacion.push(lista_habitacion);
+        datos_habitacion.push(lista_clientes);
+        $.ajax({
+          url: 'guarda_asignacion',
+          data: {data: datos_habitacion},
+          type: "POST",
+          dataType: "html",
+          error: function(response)
+          {
+              alert('Error al guardar la Asignación!->'. response);
+          },
+          success: function(response)
+          {
+            $('body').removeClass('modal-open');
+            $('.modal-backdrop').remove();
+            $('#contenido').load('asignar_habitaciones');
+          }
+        });
+        break;
     case 'chkout':
-      var objeto = new Object();
-      objeto.cod_habitacion = $('.modal-title').data('codhab');
-      objeto.total = $('#total').val();
-      datos = JSON.stringify(objeto);
-      console.log(datos);
-      $.ajax({
-        url: 'guarda_checkout',
-        data: {data: datos},
-        type: "POST",
-        dataType: "html",
-        error: function()
-        {
-            alert('Error en el CheckOut!');
-        },
-        success: function(response)
-        {
-          $('body').removeClass('modal-open');
-          $('.modal-backdrop').remove();
-          $('#contenido').load('asignar_habitaciones');
+        var objeto = new Object();
+        objeto.cod_habitacion = $('.modal-title').data('codhab');
+        objeto.total = $('#total').val();
+        var estado_hab = $("input[name='estado_hab']:checked");
+        objeto.estado_hab = estado_hab.attr('id');
+        datos = JSON.stringify(objeto);
+        console.log();
+        if (estado_hab.length > 0) {
+          $.ajax({
+            url: 'guarda_checkout',
+            data: {data: datos},
+            type: "POST",
+            dataType: "html",
+            error: function()
+            {
+                alert('Error en el CheckOut!');
+            },
+            success: function(response)
+            {
+              $('body').removeClass('modal-open');
+              $('.modal-backdrop').remove();
+              $('#contenido').load('asignar_habitaciones');
+            }
+          });
+          
         }
-      });
-      break;
+        else{
+          alert('Cual es el estado de la Habitación???');
+        }
+        break;
     case 'chkhab':
-      var cod_habitacion = $('.modal-title').data('codhab');
-      $.ajax({
-        url: 'guarda_habilitacion',
-        data: {data: cod_habitacion},
-        type: "POST",
-        dataType: "html",
-        error: function()
-        {
-            alert('Error al habilitar la habitacion!');
-        },
-        success: function(response)
-        {
-          $('body').removeClass('modal-open');
-          $('.modal-backdrop').remove();
-          $('#contenido').load('asignar_habitaciones');
-        }
-      });
-      break;
+        var cod_habitacion = $('.modal-title').data('codhab');
+        $.ajax({
+          url: 'guarda_habilitacion',
+          data: {data: cod_habitacion},
+          type: "POST",
+          dataType: "html",
+          error: function()
+          {
+              alert('Error al habilitar la habitacion!');
+          },
+          success: function(response)
+          {
+            $('body').removeClass('modal-open');
+            $('.modal-backdrop').remove();
+            $('#contenido').load('asignar_habitaciones');
+          }
+        });
+        break;
   }
 });
 
@@ -565,7 +584,7 @@ $(document).on("click", "#add_people", function(e){
   var num_personas = $('#num_personas img').length;
   var persona = "<a href='#' id='cli"+ 
                     ++num_personas +
-                    "' data-toggle='collapse' data-target='#reg_clients"+ num_personas +"' aria-expanded='false' aria-controls='reg_clients' data-target='#reg_clients'>"+
+                    "' data-toggle='collapse' data-target='#reg_clients"+ num_personas +"' aria-expanded='false'>"+
                     "<img src='../assets/images/people.png' class='people'>"+
                 "</a>"+
                 "<a href='#' id='eliminar_persona' data-id='"+ num_personas +"'><span class='badge'>X</span></a>";
@@ -587,11 +606,11 @@ $(document).on("click", "#add_people", function(e){
                       "</div>"+
                       "<div class='col-md-4 form-group'>"+
                         "Ciudad: "+
-                        "<input type='text' class='form-control' id='nacionalidad' aria-describedby='basic-addon3'>"+
+                        "<input type='text' class='form-control' id='ciudad' aria-describedby='basic-addon3'>"+
                       "</div>"+
                       "<div class='col-md-5 form-group'>"+
                         "Dirección: "+
-                        "<input type='text' class='form-control' id='nacionalidad' aria-describedby='basic-addon3'>"+
+                        "<input type='text' class='form-control' id='direccion' aria-describedby='basic-addon3'>"+
                       "</div>"+
                     "</div>"+
                   "</div>";
@@ -660,6 +679,7 @@ $(document).on('change', '#nombre_apell',function(){
         }
     });
 });
+
 /****************************************************
 *                         *
 * Author: Jorge Anibal Zapata Agreda

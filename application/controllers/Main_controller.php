@@ -289,7 +289,9 @@ class Main_controller extends CI_Controller {
 
 	public function vista_checkout(){
 		if ($this->session->userdata('is_logged_in')){
-			$data['datos'] = $this->Habitaciones_model->datos_habitacion($_POST['data']);
+			$datos = $this->Habitaciones_model->datos_habitacion($_POST['data']);
+			$data['datos'] = $datos;
+			$data['clientes'] = $this->Habitaciones_model->lista_clientes($datos->clientes);
 			$this->load->view('checkout_view',$data);
 		} else{
 			redirect('main/restringido');
@@ -306,7 +308,7 @@ class Main_controller extends CI_Controller {
 
 	public function guarda_asignacion(){
 		if ($this->session->userdata('is_logged_in')) {
-			$datos = json_decode($_POST['data']);
+			$datos = $_POST['data'];
 			$guarda_asignacion = $this->Habitaciones_model->guarda_asignacion($datos);
 			echo $guarda_asignacion;
 		} else{

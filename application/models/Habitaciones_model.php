@@ -50,15 +50,20 @@ class Habitaciones_model extends CI_Model{
 
 	public function datos_habitacion($codigo){
 		$query = $this->db->query("SELECT *, 
-									(SELECT c.rsocial FROM clientes c, kardex_hab k WHERE c.id_clientes = k.id_cliente and k.vigente = 1 and k.cod_hab = '$codigo') as nombre,
 									(select costo from tipo_habitacion where id_tipo_hab = habitaciones.id_tipo_hab) as costo, 
 									(select DATE_FORMAT(fecha_chk_in,'%d-%m-%Y') from kardex_hab k where k.cod_hab = habitaciones.codigo and k.vigente = '1') as fch_chkin, 
 									(select hora_chk_in from kardex_hab k where k.cod_hab = habitaciones.codigo and k.vigente = '1') as hr_chkin, 
 									(SELECT DATEDIFF(curdate(),concat(k.fecha_chk_in,' ',k.hora_chk_in)) from kardex_hab k WHERE k.cod_hab = '$codigo' and k.vigente = '1') as dias,
 									(select k.obs from kardex_hab k WHERE k.cod_hab = '$codigo' and k.vigente = '1') as obs,
-									(SELECT k.adelanto FROM kardex_hab k WHERE k.cod_hab = '$codigo' and k.vigente = '1') as adelanto
+									(SELECT k.adelanto FROM kardex_hab k WHERE k.cod_hab = '$codigo' and k.vigente = '1') as adelanto,
+									(SELECT k.id_clientes_registrados FROM kardex_hab k WHERE k.cod_hab = '$codigo' and k.vigente = '1') as clientes
 									FROM habitaciones where codigo = '$codigo'");
 		return $query->row();
+	}
+
+	public function lista_clientes($clientes){
+		$query = $this->db->query("SELECT * FROM clientes where id_clientes in $clientes");
+		return $query->result();
 	}
 
 	/*
@@ -80,22 +85,40 @@ class Habitaciones_model extends CI_Model{
 	}
 
 	public function guarda_asignacion($datos){
-		$ql = $this->db->select('id_clientes')->from('clientes')->where('nit_cliente',$datos->ci_passport)->get();
 
-		if( $ql->num_rows() > 0 ) {
-			$id_cliente = $ql->row()->id_clientes;
-		} else {
-		    $a = array('rsocial' => $datos->nombre_apell, 'nit_cliente' => $datos->ci_passport);
-		    $this->db->insert('clientes', $a);
-			$id_cliente = $this->db->insert_id();
+		// Seccion de Guardado de Clientes
+		$clientes = $datos[1];
+		$lista_clientes = [];
+		foreach ($clientes as $key) {
+			$datos_cliente = json_decode($key);
+			$ql = $this->db->select('id_clientes')->from('clientes')->where('nit_cliente',$datos_cliente->nit_cliente)->get();
+			if( $ql->num_rows() > 0 ) {
+				$lista_clientes[] = $ql->row()->id_clientes;
+			} else {
+			    $a = array('rsocial' => $datos_cliente->rsocial, 'nit_cliente' => $datos_cliente->nit_cliente, 'pais' => $datos_cliente->nacionalidad, 'ciudad' => $datos_cliente->ciudad, 'direccion' => $datos_cliente->direccion);
+			    $this->db->insert('clientes', $a);
+				$id_cliente = $this->db->insert_id();
+				$lista_clientes[] = $id_cliente;
+			}
 		}
-		//$query_clientes = $this->db->query("INSERT INTO clientes (id_clientes, rsocial, nit_cliente) values('','$datos->nombre_apell','$datos->ci_passport')");
+		$lista_clientes = json_encode($lista_clientes);
+		$lista_clientes = str_replace('[', '(', $lista_clientes);
+		$lista_clientes = str_replace(']', ')', $lista_clientes);
+
+		// Seccion de Guardado datos de la Habitación
 		$usuario = $this->session->userdata["usuario"];
-		$fecha_checkin = date_create($datos->fecha_checkin);
+		$cod_hab = $datos[0][0]['cod_hab'];
+		$fecha_checkin = $datos[0][0]['fecha_checkin'];
+		$hora_checkin = $datos[0][0]['hora_checkin'];
+		$num_personas = count($lista_clientes);
+		$desayuno = $datos[0][0]['desayuno'];
+		$adelanto = $datos[0][0]['adelanto'];
+		$observaciones = $datos[0][0]['observaciones'];
+		$fecha_checkin = date_create($fecha_checkin);
 		$fecha_checkin = date_format($fecha_checkin, 'Y-m-d');
-		$query_update_kardex = $this->db->query("UPDATE kardex_hab SET vigente = '0' WHERE cod_hab = '$datos->cod_hab'");
-		$query_kardex = $this->db->query("INSERT INTO kardex_hab (id_kardex_hab, cod_hab, fecha_chk_in, hora_chk_in, num_personas, id_cliente, desayuno, adelanto, usuario, fecha_registro, obs, vigente) values('', '$datos->cod_hab', '$fecha_checkin', '$datos->hora_checkin', '$datos->num_personas',$id_cliente, '$datos->desayuno', '$datos->adelanto', '$usuario',now(), '$datos->observaciones', '1')");
-		$query_habitaciones = $this->db->query("UPDATE habitaciones SET estado = 'ocupado' WHERE codigo = '$datos->cod_hab'");
+		$query_update_kardex = $this->db->query("UPDATE kardex_hab SET vigente = '0' WHERE cod_hab = '$cod_hab'");
+		$query_kardex = $this->db->query("INSERT INTO kardex_hab (id_kardex_hab, cod_hab, fecha_chk_in, hora_chk_in, num_personas, id_clientes_registrados, desayuno, adelanto, usuario, fecha_registro, obs, vigente) values('', '$cod_hab', '$fecha_checkin', '$hora_checkin', '$num_personas','$lista_clientes', '$desayuno', '$adelanto', '$usuario',now(), '$observaciones', '1')");
+		$query_habitaciones = $this->db->query("UPDATE habitaciones SET estado = 'ocupado' WHERE codigo = '$cod_hab'");
 		return $query_kardex;
 	}
 
@@ -103,7 +126,7 @@ class Habitaciones_model extends CI_Model{
 		$dato = json_decode($dato);
 		$usuario = $this->session->userdata["usuario"];
 		$query = $this->db->query("UPDATE kardex_hab SET fecha_chk_out = curdate(), hora_chk_out = curtime(), total_cobrado = '$dato->total', usuario = '$usuario',fecha_registro = now() WHERE cod_hab = '$dato->cod_habitacion' and vigente = '1'");
-		$query_estado = $this->db->query ("UPDATE habitaciones SET estado = 'libre' WHERE codigo = '$dato->cod_habitacion'");
+		$query_estado = $this->db->query ("UPDATE habitaciones SET estado = '$dato->estado_hab' WHERE codigo = '$dato->cod_habitacion'");
 		return $query;
 	}
 

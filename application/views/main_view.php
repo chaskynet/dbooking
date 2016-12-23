@@ -101,9 +101,7 @@
 					  	<a href="#" class="list-group-item list-group-item-success" style="width:100%;"> Habitaciones Disponibles <span class="badge">2</span></a>
 				  			
 					  	<a href="#" class="list-group-item list-group-item-warning" style="width:100%;"> Habitaciones Reservadas <span class="badge">1</span></a>
-				  		
 				  	</div>
-
 				  </div>
 				</div>
 			</div>
