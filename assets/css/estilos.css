@@ -40,6 +40,21 @@ body{
 	margin-bottom: 1px;
 }
 
+.panel-success > .panel-heading{
+	background-color: #23D919;
+	color:black;
+}
+
+.panel-danger > .panel-heading{
+	background-color: #D00019;
+	color:white;
+}
+
+.panel-warning > .panel-heading{
+	background-color: #E4D61A;
+	color:black;
+}
+
 .people{
 	width: 13%;
 }

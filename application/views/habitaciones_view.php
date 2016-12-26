@@ -22,7 +22,7 @@
 		foreach ($habitaciones as $key) {
 			$i++;
 	?>
-	<div class="panel panel-<?php if ($key->estado == 'libre') {
+	<div class="panel panel-<?php if ($key->estado == 'libre' || $key->estado == 'limpio') {
 		echo 'success';
 	} elseif ($key->estado == 'ocupado') {
 		echo 'danger';
@@ -35,7 +35,7 @@
 	}?> panel_habitaciones">
 		<div class="panel-heading codigo_habitacion">
 			Hab. <?=$key->codigo?>
-			<button class="btn btn-<?php if ($key->estado == 'libre') {
+			<button class="btn btn-<?php if ($key->estado == 'libre' || $key->estado == 'limpio') {
 					echo 'info';
 				} elseif ($key->estado == 'ocupado') {
 					echo 'danger';
@@ -49,6 +49,9 @@
 				<?php
 				switch ($key->estado) {
 					case 'libre':
+						echo 'Check In';
+						break;
+					case 'limpio':
 						echo 'Check In';
 						break;
 					case 'reservado':
