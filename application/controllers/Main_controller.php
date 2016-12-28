@@ -16,6 +16,10 @@ class Main_controller extends CI_Controller {
 	/*************************************************************/
 	public function index(){
 		if ($this->session->userdata('is_logged_in')){
+			$data['detalle_libres'] = $this->Habitaciones_model->detalle_libres();
+			$data['detalle_ocupadas'] = $this->Habitaciones_model->detalle_ocupadas();
+			$data['detalle_reservadas'] = $this->Habitaciones_model->detalle_reservadas();
+			$data['ingresos'] = $this->Habitaciones_model->ingresos();
 			$this->load->view('main_view',$data);
 		} else{
 			$this->login();
@@ -27,7 +31,13 @@ class Main_controller extends CI_Controller {
 		if ($this->session->userdata('is_logged_in')){
 			//$data['vacias'] = $this->Facturas_model->factu_vacias()->factu_vacias;
 			// $this->load->view('main_view',$data);
-			$this->load->view('main_view');
+
+			$data['detalle_libres'] = $this->Habitaciones_model->detalle_libres();
+			$data['detalle_ocupadas'] = $this->Habitaciones_model->detalle_ocupadas();
+			$data['detalle_reservadas'] = $this->Habitaciones_model->detalle_reservadas();
+			$data['ingresos'] = $this->Habitaciones_model->ingresos();
+
+			$this->load->view('main_view', $data);
 		} else{
 			$this->load->view('login_view');
 		}
@@ -37,7 +47,13 @@ class Main_controller extends CI_Controller {
 		if ($this->session->userdata('is_logged_in')){
 			// $data['vacias'] = $this->Facturas_model->factu_vacias()->factu_vacias;
 			//$this->load->view('main_view',$data);
-			$this->load->view('main_view');
+
+			$data['detalle_libres'] = $this->Habitaciones_model->detalle_libres();
+			$data['detalle_ocupadas'] = $this->Habitaciones_model->detalle_ocupadas();
+			$data['detalle_reservadas'] = $this->Habitaciones_model->detalle_reservadas();
+			$data['ingresos'] = $this->Habitaciones_model->ingresos();
+
+			$this->load->view('main_view', $data);
 		} else{
 			redirect('Main_controller/restringido');
 		}
@@ -354,12 +370,37 @@ class Main_controller extends CI_Controller {
 	/**********  Seccion de Caja  *********************/
 	public function vista_caja(){
 		if ($this->session->userdata('is_logged_in')){
-			$data['libres'] = $this->Habitaciones_model->libres();
-			$data['ocupadas'] = $this->Habitaciones_model->ocupadas();
+			$data['detalle_libres'] = $this->Habitaciones_model->detalle_libres();
+			$data['detalle_ocupadas'] = $this->Habitaciones_model->detalle_ocupadas();
+			$data['detalle_reservadas'] = $this->Habitaciones_model->detalle_reservadas();
 			$data['ingresos'] = $this->Habitaciones_model->ingresos();
 			$this->load->view('caja_view',$data);
 		} else{
 			redirect('main/restringido');
+		}
+	}
+
+	/**
+	* Desc: Imprime Reporte de Caja
+	*
+	*/
+	public function to_pdf_caja(){
+		if ($this->session->userdata('is_logged_in')){
+			$this->load->library('MPDF53/Mpdf');
+			$this->load->library('PdfPrint');
+			//$mpdf = new mPDF('utf-8', 'Letter',0,'',5,6,5,5,0,10);
+			$mpdf = new PdfPrint('utf-8', 'Letter',0,'',7,8,5,1,0,0);
+			ob_clean();
+			$data['detalle_libres'] = $this->Habitaciones_model->detalle_libres();
+			$data['detalle_ocupadas'] = $this->Habitaciones_model->detalle_ocupadas();
+			$data['detalle_reservadas'] = $this->Habitaciones_model->detalle_reservadas();
+			$data['ingresos'] = $this->Habitaciones_model->ingresos();
+			$mpdf->WriteHTML($this->load->view('caja_pdf_view', $data, true));
+			$mpdf->AutoPrint(true);
+			$mpdf->Output();
+			ob_clean();
+		} else{
+			redirect('Main_controller/restringido');
 		}
 	}
 }

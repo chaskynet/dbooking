@@ -4,7 +4,7 @@
 	<meta charset="UTF-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-	<title>DBooking - Olga's Hotel</title>
+	<title>DBooking - Hotel</title>
 	<link rel="stylesheet" type="text/css" href="<?= base_url();?>assets/js/jquery-ui-1.11.4/jquery-ui.min.css">
 	<link rel="stylesheet" href="<?=base_url();?>assets/css/bootstrap/css/bootstrap.min.css">
 	<link rel="stylesheet" href="<?=base_url();?>assets/css/estilos_side_menu.css">
@@ -85,7 +85,7 @@
 				    <h3 class="panel-title"><span class="glyphicon glyphicon-usd"></span> Ingresos</h3>
 				  </div>
 				  <div class="panel-body">
-				  	<button class="btn" style="width:100%;"><span class="glyphicon glyphicon-usd"></span> Facturación del día <span class="badge">$ 4</span></button>
+				  	<button class="btn" style="width:100%;"><span class="glyphicon glyphicon-usd"></span> Facturación del día <span class="badge"><?=$ingresos->ingresos;?> BS.</span></button>
 				  </div>
 				</div>
 			</div>
@@ -96,11 +96,11 @@
 				  </div>
 				  <div class="panel-body">
 				  	<div class="list-group">
-					  	<a href="#" class="list-group-item list-group-item-info" style="width:100%;"> Habitaciones Ocupadas <span class="badge">4</span></a>
+					  	<a href="#" class="list-group-item list-group-item-info" style="width:100%;"> Habitaciones Ocupadas <span class="badge"><?=count($detalle_ocupadas);?></span></a>
 
-					  	<a href="#" class="list-group-item list-group-item-success" style="width:100%;"> Habitaciones Disponibles <span class="badge">2</span></a>
+					  	<a href="#" class="list-group-item list-group-item-success" style="width:100%;"> Habitaciones Disponibles <span class="badge"><?=count($detalle_libres); ?></span></a>
 				  			
-					  	<a href="#" class="list-group-item list-group-item-warning" style="width:100%;"> Habitaciones Reservadas <span class="badge">1</span></a>
+					  	<a href="#" class="list-group-item list-group-item-warning" style="width:100%;"> Habitaciones Reservadas <span class="badge"><?=count($detalle_reservadas); ?></span></a>
 				  	</div>
 				  </div>
 				</div>

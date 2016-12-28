@@ -465,6 +465,7 @@ $(document).on('click','#btn_chk_in_out',function(){
     $('.modal-title').data('codhab', codigo);
     $('.modal-body').load('vista_checkout', {data: codigo});
     $('#save_chk_in_out').data('chkinout','chkout');
+
   } else if (tipo == 'Habilitar') {
     $('.modal-title').text('Habitación: '+codigo);
     $('.modal-title').data('codhab', codigo);
@@ -550,8 +551,7 @@ $(document).on('click','#save_chk_in_out',function(e){
               $('.modal-backdrop').remove();
               $('#contenido').load('asignar_habitaciones');
             }
-          });
-          
+          }); 
         }
         else{
           alert('Cual es el estado de la Habitación???');
@@ -701,4 +701,9 @@ $(document).on("click","#caja",function(e){
   e.preventDefault();
   $('#contenido').load('vista_caja');
   menuClose();
+});
+
+$(document).on("click","#imprimeCaja", function(e){
+  e.preventDefault();
+  $('#frm_pdf_caja').submit();
 });

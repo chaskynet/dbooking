@@ -135,14 +135,19 @@ class Habitaciones_model extends CI_Model{
 		return $guarda_habilitacion;
 	}
 
-	public function libres(){
-		$query = $this->db->query("SELECT count(*) as libres from habitaciones where estado = 'libre'");
-		return $query->row();
+	public function detalle_libres(){
+		$query = $this->db->query("SELECT * FROM habitaciones WHERE estado = 'libre' or estado = 'limpio'");
+		return $query->result();
 	}
 
-	public function ocupadas(){
-		$query = $this->db->query("SELECT count(*) as ocupadas from habitaciones where estado = 'ocupado'");
-		return $query->row();
+	public function detalle_ocupadas(){
+		$query = $this->db->query("SELECT * FROM habitaciones WHERE estado = 'ocupado'");
+		return $query->result();
+	}
+
+	public function detalle_reservadas(){
+		$query = $this->db->query("SELECT * FROM habitaciones WHERE estado = 'reservado'");
+		return $query->result();
 	}
 
 	public function ingresos(){
