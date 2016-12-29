@@ -1,10 +1,10 @@
 <div class="input-group form-group">
   <span class="input-group-addon" id="basic-addon3">Clientes: </span>
-  <!-- <input type="text" class="form-control" id="nombre" aria-describedby="basic-addon3" value='' disabled> -->
+  
   <?php
   		foreach ($clientes as $key) {
   ?>
-  	<a href="#" id="cli_<?=$key->id_clientes;?>" data-toggle='collapse' data-target="#reg_clients_<?=$key->id_clientes;?>" aria-expanded="false">
+  	<a href="#" id='cli_<?=$key->id_clientes;?>' data-toggle='collapse' data-target='#reg_clients_<?=$key->id_clientes;?>' aria-expanded="false">
   		<img src='<?=base_url();?>assets/images/people.png' class='people'>
   	</a> 
   <?
@@ -12,11 +12,11 @@
   		foreach ($clientes as $key) {
   ?>
   	<div class="row col-md-12">
-	  	<div class='collapse' id="reg_clients_<?=$key->id_clientes;?>" data-cliente="<?=$key->id_clientes;?>">
+	  	<div class='collapse' id='reg_clients_<?=$key->id_clientes;?>' data-cliente='<?=$key->id_clientes;?>'>
 		    <div class='row' style = 'margin-left:15px;'>
 		      <div class='col-md-4 input-group form-group' style='float: left;'>
 		        <span class='input-group-addon' id='label_ci_passport'>CI/Pasaporte: </span>
-		        <input type='text' class='form-control' id='ci_passport' aria-describedby='basic-label_ci_passport' value="<?=$key->nit_cliente;?>" disabled>
+		        <input type='text' class='form-control' id='ci_passport' aria-describedby='basic-label_ci_passport' value='<?=$key->nit_cliente;?>' disabled>
 		      </div>
 		      <div class='col-md-7 input-group form-group' style='float: right;with:66%;'>
 		        <span class='input-group-addon' id='basic-addon3'>Nombre y Apellidos: </span>
@@ -104,9 +104,9 @@
   	</div>
   	<div class="col-lg-4">
 	    <div class="input-group">
-	      <input type="text" class="form-control" aria-label="mantenimiento" value="Mantenimiento" disabled>
+	      <input type="text" class="form-control" aria-label="reservado" value="Reservado" disabled>
 	      <span class="input-group-addon">
-	        <input type="radio" aria-label="mantenimiento" name="estado_hab" id="mantenimiento">
+	        <input type="radio" aria-label="reservado" name="estado_hab" id="reservado">
 	      </span>
 	    </div>
   	</div>

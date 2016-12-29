@@ -29,9 +29,6 @@ class Main_controller extends CI_Controller {
 	
 	public function login(){
 		if ($this->session->userdata('is_logged_in')){
-			//$data['vacias'] = $this->Facturas_model->factu_vacias()->factu_vacias;
-			// $this->load->view('main_view',$data);
-
 			$data['detalle_libres'] = $this->Habitaciones_model->detalle_libres();
 			$data['detalle_ocupadas'] = $this->Habitaciones_model->detalle_ocupadas();
 			$data['detalle_reservadas'] = $this->Habitaciones_model->detalle_reservadas();
@@ -45,9 +42,6 @@ class Main_controller extends CI_Controller {
 
 	public function principal(){
 		if ($this->session->userdata('is_logged_in')){
-			// $data['vacias'] = $this->Facturas_model->factu_vacias()->factu_vacias;
-			//$this->load->view('main_view',$data);
-
 			$data['detalle_libres'] = $this->Habitaciones_model->detalle_libres();
 			$data['detalle_ocupadas'] = $this->Habitaciones_model->detalle_ocupadas();
 			$data['detalle_reservadas'] = $this->Habitaciones_model->detalle_reservadas();
@@ -64,8 +58,7 @@ class Main_controller extends CI_Controller {
 	}
 	
 	/**
-	*
-	*
+	* Author: Jorge Anibal Zapata Agreda	* 
 	*/
 	public function login_validation(){
 		

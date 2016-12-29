@@ -62,7 +62,7 @@ class Habitaciones_model extends CI_Model{
 	}
 
 	public function lista_clientes($clientes){
-		$query = $this->db->query("SELECT * FROM clientes where id_clientes in $clientes");
+		$query = $this->db->query("SELECT * FROM clientes where id_clientes in ($clientes)");
 		return $query->result();
 	}
 
@@ -102,8 +102,8 @@ class Habitaciones_model extends CI_Model{
 			}
 		}
 		$lista_clientes = json_encode($lista_clientes);
-		$lista_clientes = str_replace('[', '(', $lista_clientes);
-		$lista_clientes = str_replace(']', ')', $lista_clientes);
+		$lista_clientes = str_replace('[', '', $lista_clientes);
+		$lista_clientes = str_replace(']', '', $lista_clientes);
 
 		// Seccion de Guardado datos de la Habitación
 		$usuario = $this->session->userdata["usuario"];
