@@ -70,7 +70,7 @@ class Habitaciones_model extends CI_Model{
 	* Desc: Carga la Razon Social en base al Nit del Cliente
 	*/
 	public function carga_rsocial($nit_cliente){
-		$query = $this->db->query("SELECT distinct(rsocial) from clientes where nit_cliente = $nit_cliente");
+		$query = $this->db->query("SELECT distinct(rsocial) from clientes where nit_cliente = '$nit_cliente'");
 		return $query->result();
 	}
 
