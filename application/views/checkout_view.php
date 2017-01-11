@@ -8,7 +8,7 @@
   		<img src='<?=base_url();?>assets/images/people.png' class='people'>
   	</a> 
   <?
-  		}
+  		};
   		foreach ($clientes as $key) {
   ?>
   	<div class="row col-md-12">
@@ -40,7 +40,7 @@
 	  	</div>
   	</div>
   <?
-  		}
+  		};
   ?>
 </div>
 <div class="row form-group col-md-12">

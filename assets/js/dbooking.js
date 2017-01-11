@@ -707,3 +707,29 @@ $(document).on("click","#imprimeCaja", function(e){
   e.preventDefault();
   $('#frm_pdf_caja').submit();
 });
+
+/****************************************************
+*                         *
+*           Sección de Reportes                     *
+*                         *
+*****************************************************/
+$(document).on("click","#reportes",function(e){
+  e.preventDefault();
+  $('#contenido').load('vista_reportes');
+  menuClose();
+});
+
+$(document).on('keyup',"#habitacion", function(e){
+  if (e.which == 13) 
+  {
+    var valor = $(this).val();
+    $("#contenido").load("busca_hab_rep", {buscar: valor});
+    $('#h_cod_hab').val(valor);
+   }
+
+});
+
+$(document).on("click","#imprimeReport", function(e){
+  e.preventDefault();
+  $('#frm_pdf_report').submit();
+});

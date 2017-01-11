@@ -80,12 +80,11 @@ class Habitaciones_model extends CI_Model{
 	public function actualiza_rsocial($datos){
 		$dato = json_decode($datos);
 		$rsocial = addslashes($dato->rsocial);
-		$query = $this->db->query("UPDATE clientes SET rsocial= '$rsocial' where nit_cliente = $dato->nit_cliente");
+		$query = $this->db->query("UPDATE clientes SET rsocial= '$rsocial' where nit_cliente = '$dato->nit_cliente'");
 		return $query;
 	}
 
 	public function guarda_asignacion($datos){
-
 		// Seccion de Guardado de Clientes
 		$clientes = $datos[1];
 		$lista_clientes = [];
@@ -104,6 +103,7 @@ class Habitaciones_model extends CI_Model{
 		$lista_clientes = json_encode($lista_clientes);
 		$lista_clientes = str_replace('[', '', $lista_clientes);
 		$lista_clientes = str_replace(']', '', $lista_clientes);
+		$lista_clientes = str_replace('"', '', $lista_clientes);
 
 		// Seccion de Guardado datos de la Habitación
 		$usuario = $this->session->userdata["usuario"];

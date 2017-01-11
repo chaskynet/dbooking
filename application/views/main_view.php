@@ -54,6 +54,9 @@
                     <a href="#" id="caja"> <i class="glyphicon glyphicon-usd"></i> &nbsp; Caja </a>
                 </li>
                 <?php } ?>
+                <li>                      
+                    <a href="#" id="reportes"> <i class="glyphicon glyphicon-list-alt"></i> &nbsp; Reportes </a>
+                </li>
                 <li>
                     <a href="logout"> <i class="glyphicon glyphicon-off"></i> &nbsp; Salir </a>
                 </li>

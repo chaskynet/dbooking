@@ -396,4 +396,50 @@ class Main_controller extends CI_Controller {
 			redirect('Main_controller/restringido');
 		}
 	}
+
+	/***********************************************
+	 * *    *  Seccion Reportes     ****** *** *****
+	 ***********************************************/
+	public function vista_reportes(){
+		if ($this->session->userdata('is_logged_in')){
+			$this->load->view('reports_view');
+		} else{
+			redirect('main/restringido');
+		}
+	}
+
+	public function busca_hab_rep(){
+		if ($this->session->userdata('is_logged_in')){
+			$datos = $this->Habitaciones_model->datos_habitacion($_POST['buscar']);
+			$data['clientes'] = $this->Habitaciones_model->lista_clientes($datos->clientes);
+			$data['cod_hab'] = $_POST['buscar'];
+			$this->load->view('reports_view',$data);
+		} else{
+			redirect('main/restringido');
+		}
+	}
+
+	/**
+	* Desc: Imprime Reporte de Caja
+	*
+	*/
+	public function to_pdf_report(){
+		if ($this->session->userdata('is_logged_in')){
+			$this->load->library('MPDF53/Mpdf');
+			$this->load->library('PdfPrint');
+			//$mpdf = new mPDF('utf-8', 'Letter',0,'',5,6,5,5,0,10);
+			$mpdf = new PdfPrint('utf-8', 'Letter',0,'',7,8,5,1,0,0);
+			ob_clean();
+			$habitacion = $this->input->post('h_cod_hab');
+			$datos = $this->Habitaciones_model->datos_habitacion($habitacion);
+			$data['clientes'] = $this->Habitaciones_model->lista_clientes($datos->clientes);
+			$data['cod_hab'] = $habitacion;
+			$mpdf->WriteHTML($this->load->view('report_pdf_view', $data, true));
+			$mpdf->AutoPrint(true);
+			$mpdf->Output();
+			ob_clean();
+		} else{
+			redirect('Main_controller/restringido');
+		}
+	}
 }
