@@ -7,7 +7,7 @@
   	<a href="#" id='cli_<?=$key->id_clientes;?>' data-toggle='collapse' data-target='#reg_clients_<?=$key->id_clientes;?>' aria-expanded="false">
   		<img src='<?=base_url();?>assets/images/people.png' class='people'>
   	</a> 
-  <?
+  <?php
   		};
   		foreach ($clientes as $key) {
   ?>
@@ -39,7 +39,7 @@
 		    </div>
 	  	</div>
   	</div>
-  <?
+  <?php
   		};
   ?>
 </div>
@@ -79,7 +79,7 @@
 </div>
 <div class="input-group form-group">
   <span class="input-group-addon" id="basic-addon3">Adelanto: </span>
-  <input type="text" class="form-control" id="adelanto" aria-describedby="basic-addon3" value="<?=$datos->adelanto?>" disabled>
+  <input type="text" class="form-control" id="adelanto" aria-describedby="basic-addon3" value="<?=$datos->adelanto?>">
 </div>
 <div class="input-group form-group">
   <span class="input-group-addon" id="basic-addon3">Total: </span>

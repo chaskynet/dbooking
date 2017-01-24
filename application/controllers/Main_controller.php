@@ -345,6 +345,16 @@ class Main_controller extends CI_Controller {
 		}
 	}
 
+	public function actualizar_habitacion(){
+		if ($this->session->userdata('is_logged_in')) {
+			$dato = $_POST['data'];
+			$actualizar_habitacion = $this->Habitaciones_model->actualizar_habitacion($dato);
+			echo $actualizar_habitacion;
+		} else{
+			redirect('main/restringido');
+		}
+	}
+
 	/****************************
 	*							*
 	* Desc: Gestion de clientes *

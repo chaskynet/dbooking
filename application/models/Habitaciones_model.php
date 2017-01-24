@@ -132,8 +132,14 @@ class Habitaciones_model extends CI_Model{
 
 	public function guarda_habilitacion($dato){
 		$query = $this->db->query("UPDATE habitaciones SET estado = 'libre' where codigo = '$dato'");
-		return $guarda_habilitacion;
+		return $query;
 	}
+
+	public function actualizar_habitacion($dato){
+		$datos = json_decode($dato);
+		$query = $this->db->query("UPDATE kardex_hab SET obs = '$datos->observaciones', adelanto = '$datos->adelanto' where cod_hab = '$datos->cod_hab'");
+		return $query;
+	}	
 
 	public function detalle_libres(){
 		$query = $this->db->query("SELECT * FROM habitaciones WHERE estado = 'libre' or estado = 'limpio'");

@@ -463,6 +463,7 @@ $(document).on('click','#btn_chk_in_out',function(){
   } else if (tipo == 'Check Out') {
     $('.modal-title').text('Check Out Habitación: '+codigo);
     $('.modal-title').data('codhab', codigo);
+    $('.modal-footer #sec_actualiza').html('<button type="button" class="btn btn-info" data-dismiss="modal" id = "update_room">Actualizar</button>');
     $('.modal-body').load('vista_checkout', {data: codigo});
     $('#save_chk_in_out').data('chkinout','chkout');
 
@@ -473,6 +474,37 @@ $(document).on('click','#btn_chk_in_out',function(){
     $('#save_chk_in_out').text('Habilitar Habitacion');
     $('#save_chk_in_out').data('chkinout','chkhab');
   };
+});
+
+
+/***************************************************
+*
+* Author: Jorge Anibal Zapata Agreda
+* Des: Boton de Actualizacion de habitaciones asignadas
+*
+***************************************************/
+$(document).on('click', '#update_room', function(){
+  var habitacion = new Object();
+  habitacion.cod_hab = $('.modal-title').data('codhab');
+  habitacion.observaciones = $('#observaciones').val();
+  habitacion.adelanto = $('#adelanto').val();
+  var datos = JSON.stringify(habitacion);
+  $.ajax({
+          url: 'actualizar_habitacion',
+          data: {data: datos},
+          type: "POST",
+          dataType: "html",
+          error: function(response)
+          {
+              alert('Error al Actualizar la Habitación!->'. response);
+          },
+          success: function(response)
+          {
+            $('body').removeClass('modal-open');
+            $('.modal-backdrop').remove();
+            $('#contenido').load('asignar_habitaciones');
+          }
+        });
 });
 
 /***************************************************
@@ -697,6 +729,11 @@ $(document).on("click","#gestion-clientes",function(e){
 *           Sección de Manejo de Caja               *
 *                         *
 *****************************************************/
+$(document).on("click", "input[type='radio']",function(){
+  console.log($(this).prop('id'));
+  $('#caja_chica input[type="text"]').prop('disabled',false);
+});
+
 $(document).on("click","#caja",function(e){
   e.preventDefault();
   $('#contenido').load('vista_caja');
