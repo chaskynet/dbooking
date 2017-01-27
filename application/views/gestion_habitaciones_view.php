@@ -7,6 +7,10 @@
         <h4 class="modal-title" id="myModalLabel">Nueva Habitación</h4>
       </div>
       <div class="modal-body">
+      	<div class="input-group form-group">
+		  <span class="input-group-addon" id="basic-addon3">Piso: </span>
+		  <input type="number" class="form-control" id="piso_hab" aria-describedby="basic-addon3">
+		</div>
         <div class="input-group form-group">
 		  <span class="input-group-addon" id="basic-addon3">Codigo: </span>
 		  <input type="text" class="form-control" id="cod_hab" aria-describedby="basic-addon3">
@@ -39,7 +43,7 @@
   </div>
 </div>
 <!-- *** FIN venta modal para Nueva Habitación *** -->
-<!-- *** Modal para Tipo Habitación *** -->
+<!-- *** Modal para Nuevo Tipo Habitación *** -->
 <div class="modal fade" id="modal_tipo_habitacion" tabindex="-1" role="dialog" aria-labelledby="modal_tipo_habitacion">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
@@ -161,6 +165,7 @@
 			<thead>
 				<tr>
 					<th>#</th>
+					<th>Piso</th>
 					<th>Codigo</th>
 					<th>Descripción</th>
 					<th>Costo</th>
@@ -175,6 +180,7 @@
 			?>
 				<tr id="<?= $key->id_habitacion; ?>">
 					<td><?= $i; ?>&nbsp; <a href="#" id="elimina_hab"><span class="glyphicon glyphicon-trash"></span></a></td>
+					<td id="piso_hab"><?= ($key->piso_hab == '0')?'Planta baja':$key->piso_hab; ?></td>
 					<td><a href="#" data-toggle="modal" data-target="#modal_edit_conf_habitacion" id="edit_conf_habitacion"><?= $key->codigo; ?></a></td>
 					<td id="desc_hab"><?= $key->descripcion; ?></td>
 					<td id="costo_hab"><?= $key->costo; ?></td>

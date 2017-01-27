@@ -293,10 +293,12 @@ $(document).on('click', '#nueva_habitacion',function(){
 $(document).on("click","#nueva_hab", function(e){
   e.preventDefault();
   var cod_hab = $("#cod_hab"),
+      piso_hab = $("#piso_hab"),
       tipo_hab = $("#tipo_hab"),
       estado_hab = $("#estado_hab"),
       objeto = new Object();
   objeto.cod_hab = cod_hab.val();
+  objeto.piso_hab = piso_hab.val();
   objeto.tipo_hab = tipo_hab.val();
   objeto.estado_hab = estado_hab.val();
   var datos = JSON.stringify(objeto);
@@ -318,6 +320,8 @@ $(document).on("click","#nueva_hab", function(e){
         // var cadena = '';
         $.each(objeto, function(i, item) {
           var cadena = "<tr id= '"+item.id_habitacion+"'><td>"+j+ '&nbsp; <a href="#" id="elimina_hab"><span class="glyphicon glyphicon-trash"></span></a>'+
+                    "</td>"+
+                    "<td>"+item.piso_hab+
                     "</td>"+
                     "<td><a href='#' data-toggle='modal' data-target='#modal_edit_conf_habitacion' id='cod_hab'>"+item.codigo+
                     "</td>"+

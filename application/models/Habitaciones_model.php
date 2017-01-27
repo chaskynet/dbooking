@@ -9,7 +9,16 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 *****************************************/
 class Habitaciones_model extends CI_Model{
 	public function lista_habitaciones(){
-		$query = $this->db->query("SELECT h.id_habitacion,h.codigo,(select t.descripcion from tipo_habitacion t where t.id_tipo_hab = h.id_tipo_hab) as descripcion,(select t.costo from tipo_habitacion t where t.id_tipo_hab = h.id_tipo_hab) as costo, h.estado, IFNULL((select k.obs from kardex_hab k where k.cod_hab = h.codigo and k.vigente = 1),'') as obs FROM `habitaciones` h");
+		$query = $this->db->query("SELECT h.id_habitacion, h.piso_hab, h.codigo,
+									(select t.descripcion 
+										from tipo_habitacion t 
+										where t.id_tipo_hab = h.id_tipo_hab) as descripcion,
+									(select t.costo 
+										from tipo_habitacion t 
+										where t.id_tipo_hab = h.id_tipo_hab) as costo, 
+									h.estado, 
+									IFNULL((select k.obs from kardex_hab k where k.cod_hab = h.codigo and k.vigente = 1),'') as obs 
+									FROM `habitaciones` h");
 		return $query->result();
 	}
 
@@ -20,7 +29,7 @@ class Habitaciones_model extends CI_Model{
 
 	public function guarda_hab($datos){
 		$datos = json_decode($datos);
-		$query = $this->db->query("INSERT INTO habitaciones (codigo, id_tipo_hab, estado) values('$datos->cod_hab','$datos->tipo_hab','$datos->estado_hab')");
+		$query = $this->db->query("INSERT INTO habitaciones (codigo, piso_hab,id_tipo_hab, estado) values('$datos->cod_hab', '$datos->piso_hab','$datos->tipo_hab','$datos->estado_hab')");
 		return $query;
 	}
 
