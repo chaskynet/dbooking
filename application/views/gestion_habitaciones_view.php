@@ -7,9 +7,13 @@
         <h4 class="modal-title" id="myModalLabel">Nueva Habitación</h4>
       </div>
       <div class="modal-body">
+      	<div id="alerta" class="alert alert-danger alert-dismissible alerta" role="alert">
+		  <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+		  <strong>Cuidado!</strong> <span id="mensaje_alerta"></span>
+		</div>
       	<div class="input-group form-group">
 		  <span class="input-group-addon" id="basic-addon3">Piso: </span>
-		  <input type="number" class="form-control" id="piso_hab" aria-describedby="basic-addon3">
+		  <input type="text" class="form-control" id="piso_hab" aria-describedby="basic-addon3">
 		</div>
         <div class="input-group form-group">
 		  <span class="input-group-addon" id="basic-addon3">Codigo: </span>
@@ -25,7 +29,7 @@
 		<div class="input-group form-group">
 		  <span class="input-group-addon" id="basic-addon3">Estado: </span>
 		  <!-- <input type="text" class="form-control" id="estado_hab" aria-describedby="basic-addon3"> -->
-		  <select name="tipo_hab" id="estado_hab" class="form-control" aria-describedby="basic-addon3">
+		  <select name="estado_hab" id="estado_hab" class="form-control" aria-describedby="basic-addon3">
 		  	<option value="0">...</option>
 		  	<option value="libre">Libre</option>
 		  	<option value="ocupado">Ocupado</option>
@@ -110,24 +114,33 @@
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-        <h4 class="modal-title" id="myModalLabel">Nueva Habitación</h4>
+        <h4 class="modal-title" id="myModalLabel">Editar Habitación</h4>
+        <input type="hidden" id="id_habitacion_ed">
       </div>
       <div class="modal-body">
+      	<div class="input-group form-group">
+		  <span class="input-group-addon" id="basic-addon3">Piso: </span>
+		  <input type="text" class="form-control" id="ed_piso_hab" aria-describedby="basic-addon3">
+		</div>
         <div class="input-group form-group">
 		  <span class="input-group-addon" id="basic-addon3">Codigo: </span>
-		  <input type="text" class="form-control" id="cod_hab" aria-describedby="basic-addon3">
+		  <input type="text" class="form-control" id="ed_cod_hab" aria-describedby="basic-addon3">
+		</div>
+		<div class="input-group form-group">
+		  <span class="input-group-addon" id="basic-addon3">Descripción: </span>
+		  <input type="text" class="form-control" id="ed_desc_hab" aria-describedby="basic-addon3" disabled>
 		</div>
 		<div class="input-group form-group">
 		  <span class="input-group-addon" id="basic-addon3">Tipo Habitación: </span>
 		  <!-- <input type="text" class="form-control" id="tipo_hab" aria-describedby="basic-addon3"> -->
-		  <select name="tipo_hab" id="tipo_hab" class="form-control" aria-describedby="basic-addon3">
+		  <select name="ed_tipo_hab" id="ed_tipo_hab" class="form-control" aria-describedby="basic-addon3">
 		  	<option value="0">...</option>
 		  </select>
 		</div>
 		<div class="input-group form-group">
 		  <span class="input-group-addon" id="basic-addon3">Estado: </span>
 		  <!-- <input type="text" class="form-control" id="estado_hab" aria-describedby="basic-addon3"> -->
-		  <select name="tipo_hab" id="estado_hab" class="form-control" aria-describedby="basic-addon3">
+		  <select name="ed_estado_hab" id="ed_estado_hab" class="form-control" aria-describedby="basic-addon3">
 		  	<option value="0">...</option>
 		  	<option value="libre">Libre</option>
 		  	<option value="ocupado">Ocupado</option>
@@ -220,7 +233,7 @@
 					$i++;
 			?>
 			<tr id="<?=$key->id_tipo_hab?>">
-				<td><?=$i;?></td>
+				<td><?= $i; ?>&nbsp; <a href="#" id="elimina_tipo_hab"><span class="glyphicon glyphicon-trash"></span></a></td>
 				<td id="tipo_desc"><a href="#" id="edit_tipo" data-toggle="modal" data-target="#modal_edit_tipo_habitacion"><?=$key->descripcion;?></a></td>
 				<td id="tipo_num_per"><?=$key->personas;?></td>
 				<td id="tipo_costo"><?=$key->costo;?></td>

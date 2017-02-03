@@ -1,0 +1,52 @@
+Observaciones:
+- Gestion de Habitaciones
+  * Verificar Actualizacion de Habitaciones  -- OK
+  * No puede Eliminar tipo habitacion  -- OK
+  * No se muestra correctamente las habitaciones creadas -- OK
+  * No refresca luego editar el tipo de habitacion -- OK
+
+- Gestion de Clientes
+  * No se puede modificar los clientes -- OK
+  * Se debe poder ver en que habitacion estan
+
+- Asignacion de Habitaciones
+  * Debe cobrar tarifa entera pasado 10 min de asignada la ahaitacion
+  * en el checkout mostrar la tarifa basi y el saldo en funcion al adelanto -- OK
+  * asignar items extra a las habitaciones
+
+- En caja
+  * el reporte debe mostrar los ingresos de dinero al momento por checkIn
+
+Precios:
+	1.- Desañuno   --> 20bs.
+	2.- Lavanderia --> 
+
+02/02/2017
+- Calcular medio hospedaje
+- No puede hacer reservas y a nombre de quien (Que la reserva sea por tiempo)
+- Añadir activos por habitacion
+- Especificar tipo de ducha (Electrica - Calefon)
+- Cambiar el estado de la habitacion con un link en la cabecera de la tarjeta:
+	estados:
+		Negro: Ocupado
+		Amarillo: Sucio
+		Azul: Reservado
+		Rojo: Mantenimiento (permitir dejar un comentario, obligue a dejar un comentario)
+		Verde: Disponible
+- En gestion de clientes:
+	- Añadir correo, ocupacion, estado civil, fch. nacimiento, lugar de trabajo.
+	- al dar checking buscar por nombre, mostrar coincidencias para escoger una de ellas.
+	- Añadir kardex de cliente: fecha ingreso, habitacion.
+	- Permitir imprimir listado de clientes
+	- permitir imprimir kardex de clientes
+- Añadir reporte de Mantenimiento
+- Aumetar posibilidad de poner numero de Factura al momento del checkout.
+
+- * Implementar Facturacion
+
+- Los reportes deben poder exportarce en formatos:
+	- Excel
+	- PDf
+- control de acceso guardando la IP
+- Validar Mac Address para acceder:
+	- Solo el Administrador tendra acceso desde cualquier Mac Address.

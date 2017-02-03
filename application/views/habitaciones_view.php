@@ -19,6 +19,17 @@
 </div>
 <!-- *** FIN venta modal para Edicion de Conf de Habitación *** -->
 <div class="row-fluid">
+	<?php
+		foreach ($pisos as $key) {
+	?>
+		<button class="btn btn-primary" type="button" id="habs_por_piso" data-piso = "<?=$key->piso_hab;?>">
+		  Piso <span class="badge"><?=$key->piso_hab;?></span> <?=$key->num_hab;?>
+		</button>
+	<?php
+		}
+	?>
+</div>
+<div class="row-fluid">
 	<?php $i = 0;
 		foreach ($habitaciones as $key) {
 			$i++;

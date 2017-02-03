@@ -8,7 +8,13 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 *
 *****************************************/
 class Habitaciones_model extends CI_Model{
-	public function lista_habitaciones(){
+	public function lista_habitaciones($piso){
+		if ($piso != '') {
+			$condicion = "WHERE piso_hab = '$piso'";
+		} else{
+			$condicion = '';
+		}
+
 		$query = $this->db->query("SELECT h.id_habitacion, h.piso_hab, h.codigo,
 									(select t.descripcion 
 										from tipo_habitacion t 
@@ -18,7 +24,7 @@ class Habitaciones_model extends CI_Model{
 										where t.id_tipo_hab = h.id_tipo_hab) as costo, 
 									h.estado, 
 									IFNULL((select k.obs from kardex_hab k where k.cod_hab = h.codigo and k.vigente = 1),'') as obs 
-									FROM `habitaciones` h");
+									FROM `habitaciones` h $condicion");
 		return $query->result();
 	}
 
@@ -33,8 +39,19 @@ class Habitaciones_model extends CI_Model{
 		return $query;
 	}
 
+	public function edita_hab($datos){
+		$datos = json_decode($datos);
+		$query = $this->db->query("UPDATE habitaciones set piso_hab = '$datos->piso_hab', codigo = '$datos->cod_hab', id_tipo_hab = '$datos->tipo_hab', estado = '$datos->estado_hab' where id_habitacion = '$datos->id_habitacion'");
+		return $query;
+	}
+
 	public function elimina_hab($datos){
 		$query = $this->db->query("DELETE FROM habitaciones where id_habitacion = '$datos'");
+		return $query;
+	}
+
+	public function elimina_tipo_hab($datos){
+		$query = $this->db->query("DELETE FROM tipo_habitacion where id_tipo_hab = '$datos'");
 		return $query;
 	}
 
@@ -169,5 +186,10 @@ class Habitaciones_model extends CI_Model{
 		$usuario = $this->session->userdata['usuario'];
 		$query = $this->db->query("SELECT ifnull(sum(total_cobrado),0) as ingresos from kardex_hab where usuario = '$usuario' and date(fecha_registro) = date(now())");
 		return $query->row();
+	}
+
+	public function pisos_hab(){
+		$query = $this->db->query("SELECT piso_hab, count(piso_hab) as num_hab FROM habitaciones group by piso_hab");
+		return $query->result();
 	}
 }

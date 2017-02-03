@@ -77,12 +77,20 @@
   <span class="input-group-addon" id="basic-addon3">Observaciones: </span>
   <input type="text" class="form-control" id="observaciones" aria-describedby="basic-addon3" value="<?=$datos->obs?>">
 </div>
-<div class="input-group form-group">
-  <span class="input-group-addon" id="basic-addon3">Adelanto: </span>
-  <input type="text" class="form-control" id="adelanto" aria-describedby="basic-addon3" value="<?=$datos->adelanto?>">
+
+<div class="row form-group col-md-12">
+	<div class="col-md-6 input-group" style="float: left;">
+	  <span class="input-group-addon" id="basic-addon3">Tarifa Basica: </span>
+	  <input type="text" class="form-control" id="adelanto" aria-describedby="basic-addon3" value="<?=$datos->costo?>" disabled>
+	</div>
+	<div class="col-md-5 input-group" style="float: right;">
+	  <span class="input-group-addon" id="basic-addon3">Adelanto: </span>
+	  <input type="text" class="form-control" id="adelanto" aria-describedby="basic-addon3" value="<?=$datos->adelanto?>">
+	</div>
 </div>
+
 <div class="input-group form-group">
-  <span class="input-group-addon" id="basic-addon3">Total: </span>
+  <span class="input-group-addon" id="basic-addon3">Saldo a Pagar: </span>
   <input type="text" class="form-control" id="total" aria-describedby="basic-addon3" value="<?=($datos->costo*$datos->dias)-$datos->adelanto;?>">
 </div>
 <div class="row form-group">

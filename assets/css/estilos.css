@@ -70,3 +70,13 @@ body{
 .cabecera_tabla{
 	background-color: #D3DDD9;
 }
+
+.alerta{
+	display: none;
+}
+
+.estado_caja{
+	text-transform: uppercase;
+	color: white;
+	background-color: #DA0521;
+}

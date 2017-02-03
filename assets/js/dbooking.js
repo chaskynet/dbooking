@@ -267,8 +267,7 @@ $(document).on('click','#adm_habitaciones', function(e){
 /*********** Sección de Habitación ***********/
 
 /**** Registra un nuevo tipo de habitacion *****/
-$(document).on('click', '#nueva_habitacion',function(){
-  
+var lista_tipo_hab = function(obj){
   $.ajax({
       url: 'lista_tipo_hab',
       //data: {data: datos},
@@ -280,13 +279,18 @@ $(document).on('click', '#nueva_habitacion',function(){
       },
       success: function(response)
       {
-        $('#tipo_hab').html("<option value='0'>...</option>");
+        var elem = "#"+obj;
+        $(elem).html("<option value='0'>...</option>");
         var objeto = JSON.parse(response);
         $.each(objeto, function(i, item) {
-          $('#tipo_hab').append("<option value='"+item.id_tipo_hab+"'>"+item.descripcion+"</option>");
+          $(elem).append("<option value='"+item.id_tipo_hab+"'>"+item.descripcion+"</option>");
         });
       }
   });
+};
+
+$(document).on('click', '#nueva_habitacion',function(){
+  lista_tipo_hab('tipo_hab');
 });
 
 /**** Registra una nueva habitacion habitacion a nivel de configuración *****/
@@ -332,7 +336,6 @@ $(document).on("click","#nueva_hab", function(e){
                     "<td>"+item.estado+
                     "</td></tr>";
           j++;
-          console.log('cadena: '+cadena);
           $('#habitaciones_conf tbody').append(cadena);
         });
       }
@@ -377,6 +380,7 @@ $(document).on('click', '#guarda_tipo', function(){
         success: function(response)
         {
           alert('Tipo de Habitacion guardada!');
+
           var cant_filas = parseInt($("#tabla_tipo_habitaciones tbody tr").length)+1;
           var cadena = "<tr id='"+
                         response+
@@ -390,6 +394,9 @@ $(document).on('click', '#guarda_tipo', function(){
                         costo_hab.val()+
                         "</td></tr>";
           $("#tabla_tipo_habitaciones tbody").append(cadena);
+          desc_tipo_hab.val('');
+          num_personas.val('');
+          costo_hab.val('');
         }
       });
 });
@@ -417,9 +424,8 @@ $(document).on("click","#edita_tipo",function(e){
         },
         success: function(response)
         {
-          //alert('Tipo de Habitacion Editada!');
-          console.log(response);
-          var fila = $("#"+id_tipo);
+          alert('Tipo de Habitacion Editada!'+id_tipo);
+          var fila = $("#tabla_tipo_habitaciones #"+id_tipo);
           fila.find("#tipo_desc").html("<a href='#'' id='edit_tipo' data-toggle='modal' data-target='#modal_edit_tipo_habitacion'>"+tipo_desc+"</a>");
           fila.find("#tipo_num_per").text(num_personas);
           fila.find("#tipo_costo").text(costo);
@@ -427,13 +433,58 @@ $(document).on("click","#edita_tipo",function(e){
       });
 });
 
-/**** To Do *****/
+/**** Edicion de Habitaciones *****/
 $(document).on("click", "#edit_conf_habitacion", function(){
-  var objeto = $(this).parents().get(1);
-  var id_tipo = $(objeto).attr('id');
+  var objeto = $(this).parents().get(1),
+      id_hab = $(objeto).attr('id');
+  $('#id_habitacion_ed').val(id_hab);
+  $('#ed_piso_hab').val(($(objeto).find('#piso_hab').text())=='Planta baja'?'0':$(objeto).find('#piso_hab').text());
+  $('#ed_cod_hab').val($(objeto).find('#edit_conf_habitacion').text());
+  $('#ed_desc_hab').val($(objeto).find('#desc_hab').text());
+  lista_tipo_hab('ed_tipo_hab');
 });
 
-/******* End To Do **********/
+$(document).on("click", "#edit_hab", function(){
+  var id_hab = $('#id_habitacion_ed').val(),
+      piso_hab = $('#ed_piso_hab').val(),
+      cod_hab = $('#ed_cod_hab').val(),
+      //desc_hab = $('#ed_desc_hab').val(),
+      tipo_hab = $('#ed_tipo_hab').val(),
+      estado_hab = $('#ed_estado_hab').val();
+  if (piso_hab.length < 1 || cod_hab.length < 1 || tipo_hab == 0 || estado_hab == 0) {
+    alert('Campos incompletos');
+  }else {
+      var objeto = new Object();
+      objeto.id_habitacion = id_hab;
+      objeto.piso_hab = piso_hab;
+      objeto.cod_hab = cod_hab;
+      //objeto.desc_hab = desc_hab;
+      objeto.tipo_hab = tipo_hab;
+      objeto.estado_hab = estado_hab;
+      var datos = JSON.stringify(objeto);
+      $.ajax({
+            url: 'edita_hab',
+            data: {data: datos},
+            type: "POST",
+            dataType: "html",
+            error: function(e)
+            {
+                alert('Error al Editar la Habitacion!'+e);
+            },
+            success: function(response)
+            {
+              alert('Habitacion Editada Correctamente!');
+              var fila = $("#"+id_hab);
+              fila.find("#piso_hab").text((piso_hab=='0'?'Planta Baja':piso_hab));
+              fila.find("#edit_conf_habitacion").text(cod_hab);
+              fila.find("#desc_hab").text($("#ed_tipo_hab option:selected").text());
+              fila.find("#estado_hab").text($("#ed_estado_hab option:selected").text());
+            }
+      });
+  }
+});
+
+/********* Fin Edicion de Habitaciones **********/
 $(document).on("click", "#elimina_hab", function(){
   var objeto = $(this).parents().get(1);
   var id_tipo = $(objeto).attr('id');
@@ -449,6 +500,26 @@ $(document).on("click", "#elimina_hab", function(){
         success: function(response)
         {
           alert('Habitacion Eliminada Correctamente!');
+          $(objeto).remove();
+        }
+  });
+});
+
+$(document).on("click", "#elimina_tipo_hab", function(){
+  var objeto = $(this).parents().get(1);
+  var id_tipo = $(objeto).attr('id');
+  $.ajax({
+        url: 'elimina_tipo_hab',
+        data: {data: id_tipo},
+        type: "POST",
+        dataType: "html",
+        error: function()
+        {
+            alert('Error al Borrar el Tipo!');
+        },
+        success: function(response)
+        {
+          alert('Tipo de Habitacion Eliminada Correctamente!');
           $(objeto).remove();
         }
   });
@@ -509,6 +580,11 @@ $(document).on('click', '#update_room', function(){
             $('#contenido').load('asignar_habitaciones');
           }
         });
+});
+
+$(document).on("click", "#habs_por_piso", function(){
+  var piso = $(this).data('piso');
+  $('#contenido').load('asignar_habitaciones',{data:piso});
 });
 
 /***************************************************
@@ -728,21 +804,188 @@ $(document).on("click","#gestion-clientes",function(e){
   menuClose();
 });
 
+$(document).on("click", "#elimina_cliente", function(){
+  var objeto = $(this).parents().get(1);
+  var id_cliente = $(objeto).attr('id');
+  $.ajax({
+        url: 'elimina_cliente',
+        data: {data: id_cliente},
+        type: "POST",
+        dataType: "html",
+        error: function()
+        {
+            alert('Error al Eliminar el cliente!');
+        },
+        success: function(response)
+        {
+          alert('Cliente Eliminado Correctamente!');
+          $(objeto).remove();
+        }
+  });
+});
+
+$(document).on("click","#edita_cliente", function(e){
+  e.preventDefault();
+  var fila = $(this).parents().get(1);
+  var id_cliente = $(fila).attr('id');
+
+  $("#id_cliente").val(id_cliente);
+  $('#ed_nombre').val($(fila).find('#nombre_cliente').text());
+  $('#ed_num_doc').val($(fila).find('#num_doc_cliente').text());
+  $('#ed_pais').val($(fila).find('#pais_cliente').text());
+  $('#ed_ciudad').val($(fila).find('#ciudad_cliente').text());
+  $('#ed_direccion').val($(fila).find('#direccion_cliente').text());
+  $('#ed_telefono').val($(fila).find('#telefono_cliente').text());
+});
+
+$(document).on("click", "#guarda_edita_cliente", function(){
+  var objeto = new Object();
+  objeto.id_cliente = $("#id_cliente").val();
+  objeto.nombre_cliente = $('#ed_nombre').val();
+  objeto.num_doc_cliente = $('#ed_num_doc').val();
+  objeto.pais_cliente = $('#ed_pais').val();
+  objeto.ciudad_cliente = $('#ed_ciudad').val();
+  objeto.direccion_cliente = $('#ed_direccion').val();
+  objeto.telefono_cliente = $('#ed_telefono').val();
+
+  var datos = JSON.stringify(objeto);
+  $.ajax({
+        url: 'actualiza_cliente',
+        data: {data: datos},
+        type: "POST",
+        dataType: "html",
+        error: function()
+        {
+            alert('Error al Actualizar el cliente!');
+        },
+        success: function(response)
+        {
+          alert('Cliente Actualizado Correctamente!');
+          $('#contenido').load('gestion_clientes');
+        }
+  });
+});
+
 /****************************************************
 *                         *
 *           Sección de Manejo de Caja               *
 *                         *
 *****************************************************/
-$(document).on("click", "input[type='radio']",function(){
-  console.log($(this).prop('id'));
-  $('#caja_chica input[type="text"]').prop('disabled',false);
-});
-
 $(document).on("click","#caja",function(e){
   e.preventDefault();
   $('#contenido').load('vista_caja');
   menuClose();
 });
+
+$(document).on("click", "input[type='radio']",function(){
+  $('#caja_chica input[type="text"]').prop('disabled',false);
+  $('#guarda_mov').prop('disabled',false);
+});
+
+$(document).on("click", "#guarda_apertura", function(){
+  var objeto = new Object();
+  objeto.monto = $("#monto_apertura").val();
+  objeto.obs = $("#observaciones_apertura").val();
+  var datos = JSON.stringify(objeto);
+  $.ajax({
+        url: 'apertura_caja',
+        data: {data: datos},
+        type: "POST",
+        dataType: "html",
+        error: function(e)
+        {
+            alert('Error al Abrir caja!'+e);
+        },
+        success: function(response)
+        {
+            alert("Caja Abierta Correctamente");
+            $('#contenido').load('vista_caja');
+        }
+  });
+});
+
+$(document).on("click", "#guarda_mov", function(){
+  var tipo = $('input[type="radio"]:checked').prop('id'),
+      monto = $("#monto"),
+      id_estado_caja = $("#id_estado_caja"),
+      tipo_doc = $("#tipo_doc"),
+      num_doc = $("#num_doc"),
+      concepto = $("#concepto"),
+      objeto = new Object();
+  objeto.id_estado_caja = id_estado_caja.val();
+  objeto.tipo = tipo;
+  objeto.monto = monto.val();
+  objeto.tipo_doc = tipo_doc.val();
+  objeto.num_doc = num_doc.val();
+  objeto.concepto = concepto.val();
+  var datos = JSON.stringify(objeto);
+  $.ajax({
+        url: 'guarda_mov_caja',
+        data: {data: datos},
+        type: "POST",
+        dataType: "html",
+        error: function(e)
+        {
+            alert('Error al Guardar Movimiento de caja!'+e);
+        },
+        success: function(response)
+        {
+            alert("Movimiento guardado Correctamente");
+            var cadena = '<tr><td>1</td><td>'
+                          + tipo
+                          +'</td><td>'
+                          + tipo_doc.val()
+                          +'</td><td>'
+                          + num_doc.val()
+                          +'</td><td>'
+                          + monto.val()
+                          +'</td></tr>';
+            $('#detalle_mov tbody').append(cadena);
+            var total_caja = parseInt($("#total_caja").text());
+            if (tipo == 'ingreso') {
+              total_caja = total_caja + parseInt( monto.val() );
+            } else{
+              total_caja = total_caja - parseInt( monto.val() );
+            }
+
+            $("#total_caja").text(total_caja);
+            tipo_doc.val('');
+            num_doc.val('');
+            monto.val('');
+            concepto.val('');
+            // $('#contenido').load('vista_caja');
+        }
+  });
+});
+
+$(document).on("click","#cerrar_caja", function(){
+  var monto_total = $("#total_caja").text();
+  $("#monto_cierre").val(monto_total);
+});
+
+$(document).on("click", "#guarda_cierre",function(){
+  var objeto = new Object();
+  objeto.monto_cierre = $("#monto_cierre").val();
+  objeto.obs_cierre = $("#observaciones_cierre").val();
+  var datos = JSON.stringify(objeto);
+  $.ajax({
+        url: 'cierre_caja',
+        data: {data: datos},
+        type: "POST",
+        dataType: "html",
+        error: function(e)
+        {
+            alert('Error al Cerrar caja!'+e);
+        },
+        success: function(response)
+        {
+            alert("Caja Cerrada Correctamente");
+            $('#frm_pdf_cierre_caja').submit();
+            $('#contenido').load('vista_caja');
+        }
+  });
+});
+
 
 $(document).on("click","#imprimeCaja", function(e){
   e.preventDefault();

@@ -187,7 +187,13 @@ class Main_controller extends CI_Controller {
 	****************************************/
 	public function asignar_habitaciones(){
 		if ($this->session->userdata('is_logged_in')){
-			$data['habitaciones'] = $this->Habitaciones_model->lista_habitaciones();
+			if (isset($_POST['data'])) {
+				$piso = $_POST['data'];
+			} else{
+				$piso = '';
+			}
+			$data['pisos'] = $this->Habitaciones_model->pisos_hab();
+			$data['habitaciones'] = $this->Habitaciones_model->lista_habitaciones($piso);
 			$this->load->view('habitaciones_view', $data);
 		} else{
 			redirect('main/restringido');
@@ -197,7 +203,12 @@ class Main_controller extends CI_Controller {
 	public function gestion_habitaciones(){
 		if ($this->session->userdata('is_logged_in')){
 			$this->load->model('Habitaciones_model');
-			$data['habitaciones'] = $this->Habitaciones_model->lista_habitaciones();
+			if (isset($_POST['data'])) {
+				$piso = $piso_habitacion;
+			} else{
+				$piso = '';
+			}
+			$data['habitaciones'] = $this->Habitaciones_model->lista_habitaciones($piso);
 			$data['tipos'] = $this->Habitaciones_model->lista_tipos();
 			$this->load->view('gestion_habitaciones_view', $data);
 		} else{
@@ -208,7 +219,12 @@ class Main_controller extends CI_Controller {
 	public function lista_hab(){
 		if ($this->session->userdata('is_logged_in')){
 			$this->load->model('Habitaciones_model');
-			$habitaciones = $this->Habitaciones_model->lista_habitaciones();
+			if (isset($_POST['data'])) {
+				$piso = $piso_habitacion;
+			} else{
+				$piso = '';
+			}
+			$habitaciones = $this->Habitaciones_model->lista_habitaciones($piso);
 			echo json_encode($habitaciones);
 		} else{
 			redirect('main/restringido');
@@ -245,6 +261,16 @@ class Main_controller extends CI_Controller {
 		}
 	}
 
+	public function elimina_tipo_hab(){
+		if ($this->session->userdata('is_logged_in')) {
+			$datos = $_POST['data'];
+			$elimina_tipo_hab = $this->Habitaciones_model->elimina_tipo_hab($datos);
+			echo $elimina_tipo_hab;
+		} else{
+			redirect('main/restringido');
+		}
+	}
+
 	/******  Seccion para Tipos de Habitación ******/
 	public function guarda_tipo_hab(){
 		if ($this->session->userdata('is_logged_in')){
@@ -266,7 +292,18 @@ class Main_controller extends CI_Controller {
 		}
 	}
 
+	public function edita_hab(){
+		if ($this->session->userdata('is_logged_in')){
+			$datos = $_POST['data'];
+			$edita_hab = $this->Habitaciones_model->edita_hab($datos);
+			echo $edita_hab;
+		} else{
+			redirect('main/restringido');
+		}
+	}
+
 	/*******************************/
+
 	public function vista_checking(){
 		if ($this->session->userdata('is_logged_in')){
 			$data['datos'] = $this->Habitaciones_model->datos_habitacion($_POST['data']);
@@ -370,16 +407,95 @@ class Main_controller extends CI_Controller {
 		}
 	}
 
+	public function elimina_cliente(){
+		if ($this->session->userdata('is_logged_in')){
+			$dato = $_POST['data'];
+			$this->load->model('Clientes_model');
+			$elimina_cliente = $this->Clientes_model->elimina_cliente($dato);
+			echo $actualizar_habitacion;
+		} else{
+			$this->load->view('login_view');
+		}
+	}
+
+	public function actualiza_cliente(){
+		if ($this->session->userdata('is_logged_in')) {
+			$datos = $_POST['data'];
+			$this->load->model('Clientes_model');
+			$actualizar_cliente = $this->Clientes_model->actualiza_cliente($datos);
+			echo $actualizar_cliente;
+		} else{
+			redirect('main/restringido');
+		}
+	}
+
 	/**********  Seccion de Caja  *********************/
 	public function vista_caja(){
 		if ($this->session->userdata('is_logged_in')){
-			$data['detalle_libres'] = $this->Habitaciones_model->detalle_libres();
-			$data['detalle_ocupadas'] = $this->Habitaciones_model->detalle_ocupadas();
-			$data['detalle_reservadas'] = $this->Habitaciones_model->detalle_reservadas();
-			$data['ingresos'] = $this->Habitaciones_model->ingresos();
-			$this->load->view('caja_view',$data);
+			$this->load->model('Caja_model');
+			$data['estado'] = $this->Caja_model->estado_caja();
+			$data['detalle_mov'] = $this->Caja_model->detalle_caja();
+			$this->load->view('caja_view', $data);
 		} else{
 			redirect('main/restringido');
+		}
+	}
+
+	public function apertura_caja(){
+		if ($this->session->userdata('is_logged_in')){
+			$this->load->model('Caja_model');
+			$apertura = $this->Caja_model->apertura_caja($_POST['data']);
+			if ($apertura) {
+				$data['estado'] = $this->Caja_model->estado_caja();
+			}
+			$this->load->view('caja_view', $data);
+		} else{
+			redirect('main/restringido');
+		}
+	}
+
+	public function guarda_mov_caja(){
+		if ($this->session->userdata('is_logged_in')){
+			$this->load->model('Caja_model');
+			$apertura = $this->Caja_model->guarda_mov_caja($_POST['data']);
+			if ($apertura) {
+				//$data['detalle_mov'] = $this->Caja_model->detalle_mov();
+			}
+			$this->load->view('caja_view', $data);
+		} else{
+			redirect('main/restringido');
+		}
+	}
+
+	public function cierre_caja(){
+		if ($this->session->userdata('is_logged_in')){
+			$this->load->model('Caja_model');
+			$cierre = $this->Caja_model->cierre_caja($_POST['data']);
+			if ($cierre) {
+				$data['estado'] = $this->Caja_model->estado_caja();
+			}
+			$this->load->view('caja_view', $data);
+		} else{
+			redirect('main/restringido');
+		}
+	}
+
+	public function pdf_cierre_caja(){
+		if ($this->session->userdata('is_logged_in')){
+			$this->load->library('MPDF53/Mpdf');
+			$this->load->library('PdfPrint');
+			$this->load->model('Caja_model');
+			//$mpdf = new mPDF('utf-8', 'Letter',0,'',5,6,5,5,0,10);
+			$mpdf = new PdfPrint('utf-8', 'Letter',0,'',7,8,5,1,0,0);
+			ob_clean();
+			$id_estado = $this->input->post('id_estado_caja');
+			$data['detalle_mov'] = $this->Caja_model->detalle_caja_pdf($id_estado);
+			$mpdf->WriteHTML($this->load->view('cierre_caja_pdf_view', $data, true));
+			$mpdf->AutoPrint(true);
+			$mpdf->Output();
+			ob_clean();
+		} else{
+			redirect('Main_controller/restringido');
 		}
 	}
 
@@ -412,7 +528,11 @@ class Main_controller extends CI_Controller {
 	 ***********************************************/
 	public function vista_reportes(){
 		if ($this->session->userdata('is_logged_in')){
-			$this->load->view('reports_view');
+			$data['detalle_libres'] = $this->Habitaciones_model->detalle_libres();
+			$data['detalle_ocupadas'] = $this->Habitaciones_model->detalle_ocupadas();
+			$data['detalle_reservadas'] = $this->Habitaciones_model->detalle_reservadas();
+			$data['ingresos'] = $this->Habitaciones_model->ingresos();
+			$this->load->view('reports_view', $data);
 		} else{
 			redirect('main/restringido');
 		}
