@@ -795,6 +795,33 @@ $(document).on('change', '#nombre_apell',function(){
 /****************************************************
 *                         *
 * Author: Jorge Anibal Zapata Agreda
+* Desc: Cambia el estado de la habitación: Reservado o Mantenimiento   *
+*                         *
+*****************************************************/
+$(document).on("click", ".dropdown-menu li a", function(){
+  var objeto = new Object();
+  objeto.opcion = $(this).text();
+  objeto.codigo = $(this).data('codigo');
+  var datos = JSON.stringify(objeto);
+  $.ajax({
+        url: 'cambia_estado_hab',
+        data: {data: datos},
+        type: "POST",
+        dataType: "html",
+        error: function()
+        {
+            alert('Error al Cambiar el estado de la habitacion!');
+        },
+        success: function(response)
+        {
+          $('#contenido').load('asignar_habitaciones');
+        }
+      });
+});
+
+/****************************************************
+*                         *
+* Author: Jorge Anibal Zapata Agreda
 * Desc: Carga la pagina de Gestion de Habitaciones   *
 *                         *
 *****************************************************/
@@ -912,50 +939,55 @@ $(document).on("click", "#guarda_mov", function(){
       num_doc = $("#num_doc"),
       concepto = $("#concepto"),
       objeto = new Object();
-  objeto.id_estado_caja = id_estado_caja.val();
-  objeto.tipo = tipo;
-  objeto.monto = monto.val();
-  objeto.tipo_doc = tipo_doc.val();
-  objeto.num_doc = num_doc.val();
-  objeto.concepto = concepto.val();
-  var datos = JSON.stringify(objeto);
-  $.ajax({
-        url: 'guarda_mov_caja',
-        data: {data: datos},
-        type: "POST",
-        dataType: "html",
-        error: function(e)
-        {
-            alert('Error al Guardar Movimiento de caja!'+e);
-        },
-        success: function(response)
-        {
-            alert("Movimiento guardado Correctamente");
-            var cadena = '<tr><td>1</td><td>'
-                          + tipo
-                          +'</td><td>'
-                          + tipo_doc.val()
-                          +'</td><td>'
-                          + num_doc.val()
-                          +'</td><td>'
-                          + monto.val()
-                          +'</td></tr>';
-            $('#detalle_mov tbody').append(cadena);
-            var total_caja = parseInt($("#total_caja").text());
-            if (tipo == 'ingreso') {
-              total_caja = total_caja + parseInt( monto.val() );
-            } else{
-              total_caja = total_caja - parseInt( monto.val() );
-            }
+  
+  if (monto.val().length > 0 && tipo_doc.val().length > 0 && num_doc.val().length > 0 && concepto.val().length > 0) {
+      objeto.id_estado_caja = id_estado_caja.val();
+      objeto.tipo = tipo;
+      objeto.monto = monto.val();
+      objeto.tipo_doc = tipo_doc.val();
+      objeto.num_doc = num_doc.val();
+      objeto.concepto = concepto.val();
+      var datos = JSON.stringify(objeto);
+      $.ajax({
+            url: 'guarda_mov_caja',
+            data: {data: datos},
+            type: "POST",
+            dataType: "html",
+            error: function(e)
+            {
+                alert('Error al Guardar Movimiento de caja!'+e);
+            },
+            success: function(response)
+            {
+                alert("Movimiento guardado Correctamente");
+                var cadena = '<tr><td>1</td><td>'
+                              + tipo
+                              +'</td><td>'
+                              + tipo_doc.val()
+                              +'</td><td>'
+                              + num_doc.val()
+                              +'</td><td>'
+                              + monto.val()
+                              +'</td></tr>';
+                $('#detalle_mov tbody').append(cadena);
+                var total_caja = parseInt($("#total_caja").text());
+                if (tipo == 'ingreso') {
+                  total_caja = total_caja + parseInt( monto.val() );
+                } else{
+                  total_caja = total_caja - parseInt( monto.val() );
+                }
 
-            $("#total_caja").text(total_caja);
-            tipo_doc.val('');
-            num_doc.val('');
-            monto.val('');
-            concepto.val('');
-            // $('#contenido').load('vista_caja');
-        }
-  });
+                $("#total_caja").text(total_caja);
+                tipo_doc.val('');
+                num_doc.val('');
+                monto.val('');
+                concepto.val('');
+                // $('#contenido').load('vista_caja');
+            }
+      });
+  } else {
+    alert('Existen campos vacios!!!');
+  }
 });
 
 $(document).on("click","#cerrar_caja", function(){

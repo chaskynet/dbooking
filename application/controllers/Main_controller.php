@@ -25,7 +25,6 @@ class Main_controller extends CI_Controller {
 			$this->login();
 		}
 	}
-
 	
 	public function login(){
 		if ($this->session->userdata('is_logged_in')){
@@ -387,6 +386,16 @@ class Main_controller extends CI_Controller {
 			$dato = $_POST['data'];
 			$actualizar_habitacion = $this->Habitaciones_model->actualizar_habitacion($dato);
 			echo $actualizar_habitacion;
+		} else{
+			redirect('main/restringido');
+		}
+	}
+
+	public function cambia_estado_hab(){
+		if ($this->session->userdata('is_logged_in')) {
+			$dato = $_POST['data'];
+			$cambia_estado_hab = $this->Habitaciones_model->cambia_estado_hab($dato);
+			echo $cambia_estado_hab;
 		} else{
 			redirect('main/restringido');
 		}

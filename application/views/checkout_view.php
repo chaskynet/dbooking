@@ -110,12 +110,12 @@
 	      </span>
 	    </div>
   	</div>
-  	<div class="col-lg-4">
+  	<!-- <div class="col-lg-4">
 	    <div class="input-group">
 	      <input type="text" class="form-control" aria-label="reservado" value="Reservado" disabled>
 	      <span class="input-group-addon">
-	        <input type="radio" aria-label="reservado" name="estado_hab" id="reservado">
+	        <input type="radio" aria-label="reservado" name="estado_hab" id="Reservado">
 	      </span>
 	    </div>
-  	</div>
+  	</div> -->
 </div>

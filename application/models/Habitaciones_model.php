@@ -156,6 +156,13 @@ class Habitaciones_model extends CI_Model{
 		return $query;
 	}
 
+	public function cambia_estado_hab($dato){
+		$dato = json_decode($dato);
+		$usuario = $this->session->userdata["usuario"];
+		$query = $this->db->query ("UPDATE habitaciones SET estado = '$dato->opcion' WHERE codigo = '$dato->codigo'");
+		return $query;
+	}
+
 	public function guarda_habilitacion($dato){
 		$query = $this->db->query("UPDATE habitaciones SET estado = 'libre' where codigo = '$dato'");
 		return $query;

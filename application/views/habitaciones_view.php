@@ -38,11 +38,11 @@
 		echo 'success';
 	} elseif ($key->estado == 'ocupado') {
 		echo 'danger';
-	} elseif ($key->estado == 'mantenimiento') {
+	} elseif ($key->estado == 'Mantenimiento') {
 		echo 'warning';
 	} elseif ($key->estado == 'sucio') {
 		echo 'info';
-	} elseif ($key->estado == 'reservado') {
+	} elseif ($key->estado == 'Reservado') {
 		echo 'primary';
 	}?> panel_habitaciones">
 		<div class="panel-heading codigo_habitacion">
@@ -53,9 +53,9 @@
 					echo 'danger';
 				} elseif ($key->estado == 'sucio') {
 					echo 'warning';
-				} elseif ($key->estado == 'mantenimiento') {
+				} elseif ($key->estado == 'Mantenimiento') {
 					echo 'warning';
-				} elseif ($key->estado == 'reservado') {
+				} elseif ($key->estado == 'Reservado') {
 					echo 'success';
 				}?>" id="btn_chk_in_out" data-toggle="modal" data-target="#modal_chk_in_out" data-codigo = '<?=$key->codigo?>'>
 				<?php
@@ -66,13 +66,13 @@
 					case 'limpio':
 						echo 'Check In';
 						break;
-					case 'reservado':
+					case 'Reservado':
 						echo 'Check In';
 						break;
 					case 'ocupado':
 						echo 'Check Out';
 						break;
-					case 'mantenimiento':
+					case 'Mantenimiento':
 						echo 'Habilitar';
 						break;
 					case 'sucio':
@@ -80,7 +80,22 @@
 						break;
 				}
 				?>
-			</button>
+			</button> 
+
+			<?php
+				if ($key->estado == 'libre' || $key->estado == 'limpio') {
+			?>
+				<div class="btn-group">
+				  <button class="btn btn-default btn-xs dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" id="chg_estado_hab">
+				    ... <span class="caret"></span>
+				  </button>
+				  <ul class="dropdown-menu">
+				     <li><a href="#" id="chg_reserva" data-codigo = "<?=$key->codigo;?>">Reservado</a></li>
+				     <li><a href="#" id="chg_mantenimiento" data-codigo = "<?=$key->codigo;?>">Mantenimiento</a></li>
+				  </ul>
+				</div>
+			<?php	}
+				?>
 		</div>
 		<div class="panel-body" data-container="body" data-toggle="popover" title="Observaciones de la Habitacion" data-content="<?=$key->obs;?>">
 		   <table class="table">
