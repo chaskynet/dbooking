@@ -19,7 +19,6 @@
     			  </textarea>
 				</div>
 			</div>
-      		
       	</div>
       </div>
       <div class="modal-footer">
@@ -51,7 +50,6 @@
     			  </textarea>
 				</div>
 			</div>
-      		
       	</div>
       </div>
       <div class="modal-footer">
@@ -63,17 +61,65 @@
 </div>
 <!-- *** FIN venta modal para Ciere de Caja *** -->
 <div class="row">
-	<div class="col-md-6">
-		<h3 style="display: inline-block;">Movimientos Caja</h3> Estado: <button id="estado_caja" class="btn estado_caja"><?=$estado[0]->estado;?></button>
-		
-	</div>
-	<div class="col-md-6">
-		<?=($estado[0]->estado == 'cerrado')?"<button class='btn btn-primary' id='abrir_caja' data-toggle='modal' data-target='#modal_apertura_caja'>ABRIR CAJA</button>":"<button class='btn btn-danger' id='cerrar_caja' data-toggle='modal' data-target='#modal_cierre_caja'>CERRAR CAJA</button><form action='pdf_cierre_caja' target='_blank' method='post' id='frm_pdf_cierre_caja' name='frm_pdf_cierre_caja'><input type='hidden' id='id_estado_caja' name='id_estado_caja' value='".$estado[0]->id_estado_caja."'></form>";?>
-	</div>
-</div>
+	<nav class="navbar navbar-default">
+	  <div class="container-fluid">
+	    <!-- Brand and toggle get grouped for better mobile display -->
+	    <div class="navbar-header">
+	      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+	        <span class="sr-only">Toggle navigation</span>
+	        <span class="icon-bar"></span>
+	        <span class="icon-bar"></span>
+	        <span class="icon-bar"></span>
+	      </button>
+	      <a class="navbar-brand" href="#">Movimientos de Caja</a>
+	    </div>
 
+	    <!-- Collect the nav links, forms, and other content for toggling -->
+	    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+	      <ul class="nav navbar-nav">
+	        <li class="active"><a href="#">Estado: <span style="color: red;font-weight: bold;text-transform: uppercase;"><?=$estado[0]->estado;?></span><span class="sr-only">(current)</span></a></li>
+	      </ul>
+	      <form class="navbar-form navbar-left">
+	        <div class="form-group">
+	          <div class='input-group date' id='datetimepicker1'>
+                <input type='text' class="form-control" id="fch_bus_cierre" />
+                <span class="input-group-addon">
+                    <span class="glyphicon glyphicon-calendar"></span>
+                </span>
+              </div>
+              <script type="text/javascript">
+		            $(function () {
+		                $('#datetimepicker1').datetimepicker({
+		                	format: 'D/M/YYYY'
+		                	});
+		            });
+		        </script>
+	        </div>
+	        <button class="btn btn-default" id="busca_cierre">Buscar</button>
+	      </form>
+	      <ul class="nav navbar-nav navbar-right">
+	        <li>
+	        <div class="form-group" style="margin-top: 5%;">
+	        	<?=($estado[0]->estado == 'cerrado')?"<button class='btn btn-primary' id='abrir_caja' data-toggle='modal' data-target='#modal_apertura_caja'>ABRIR CAJA</button>":"<button class='btn btn-danger' id='cerrar_caja' data-toggle='modal' data-target='#modal_cierre_caja'>CERRAR CAJA</button><form action='pdf_cierre_caja' target='_blank' method='post' id='frm_pdf_cierre_caja' name='frm_pdf_cierre_caja'><input type='hidden' id='id_estado_caja' name='id_estado_caja' value='".$estado[0]->id_estado_caja."'></form>";?>
+	        </div>
+	        </li>
+	        <!-- <li class="dropdown">
+	          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Dropdown <span class="caret"></span></a>
+	          <ul class="dropdown-menu">
+	            <li><a href="#">Action</a></li>
+	            <li><a href="#">Another action</a></li>
+	            <li><a href="#">Something else here</a></li>
+	            <li role="separator" class="divider"></li>
+	            <li><a href="#">Separated link</a></li>
+	          </ul>
+	        </li> -->
+	      </ul>
+	    </div><!-- /.navbar-collapse -->
+	  </div><!-- /.container-fluid -->
+	</nav>
+</div>
 <div class="row-fluid">
-	<div class="col-md-6" id="caja_chica">
+	<div class="col-md-4" id="caja_chica">
 		<div class="col-md-5 col-sm-4">
 			<div class="form-group text-center">
 				<label for="monto">Ingreso</label>
@@ -111,14 +157,15 @@
 			<button id="guarda_mov" class="btn btn-primary" disabled>Guardar</button>
 		</div>
 	</div>
-	<div class="col-md-6">
-		<table class="table table-condensed" id="detalle_mov">
+	<div class="col-md-8" id="detalle_mov">
+		<table class="table table-condensed">
 			<thead>
 				<tr>
 					<th>#</th>
 					<th>Tipo Mov</th>
 					<th>Tipo Doc</th>
 					<th>Num_doc</th>
+					<th>Concepto</th>
 					<th>Monto</th>
 				</tr>
 			</thead>
@@ -128,7 +175,7 @@
 					$total = ($key->tipo_mov == 'ingreso')?$total + $key->monto:$total - $key->monto;
 					} ?>
 				<tr>
-					<td colspan="4">Total</td>
+					<td colspan="5">Total</td>
 					<td id="total_caja"><?=$total;?></td>
 				</tr>
 			</tfoot>
@@ -138,7 +185,8 @@
 					<td><?=$i;?></td>
 					<td><?=$key->tipo_mov;?></td>
 					<td><?=$key->tipo_doc;?></td>
-					<td><?=$key->num_doc?></td>
+					<td><?=$key->num_doc;?></td>
+					<td><?=$key->concepto;?></td>
 					<td><?=$key->monto;?></td>
 				</tr>
 				<?php } ?>

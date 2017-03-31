@@ -120,7 +120,14 @@ class Habitaciones_model extends CI_Model{
 			if( $ql->num_rows() > 0 ) {
 				$lista_clientes[] = $ql->row()->id_clientes;
 			} else {
-			    $a = array('rsocial' => $datos_cliente->rsocial, 'nit_cliente' => $datos_cliente->nit_cliente, 'pais' => $datos_cliente->nacionalidad, 'ciudad' => $datos_cliente->ciudad, 'direccion' => $datos_cliente->direccion);
+			    $a = array('rsocial' => $datos_cliente->rsocial, 
+			    			'nit_cliente' => $datos_cliente->nit_cliente, 
+			    			'pais' => $datos_cliente->nacionalidad, 
+			    			'ciudad' => $datos_cliente->ciudad, 
+			    			'direccion' => $datos_cliente->direccion,
+			    			'ecivil' => $datos_cliente->ecivil,
+			    			'email' => $datos_cliente->email,
+			    			'telefono' => $datos_cliente->telefono);
 			    $this->db->insert('clientes', $a);
 				$id_cliente = $this->db->insert_id();
 				$lista_clientes[] = $id_cliente;

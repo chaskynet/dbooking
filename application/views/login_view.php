@@ -4,11 +4,13 @@
 	<meta charset="UTF-8">
 	<title>Booking - Olgas</title>
 
-	<link rel="stylesheet" type="text/css" href="<?php echo base_url();?>assets/css/bootstrap/css/bootstrap.min.css">
-	<link rel="stylesheet" type="text/css" href="<?php echo base_url();?>assets/css/estilos.css">
-	<!-- <link rel="shortcut icon" href="<?php echo base_url();?>assets/images/favicon.ico"> -->
+	<!-- <link rel="stylesheet" type="text/css" href="<?= base_url();?>assets/css/bootstrap/css/bootstrap.min.css"> -->
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
 
-	<script type="text/javascript" src="<?php echo base_url();?>assets/js/jquery-1.12.1.min.js"></script>
+	<link rel="stylesheet" type="text/css" href="<?=base_url();?>assets/css/estilos.css">
+	<!-- <link rel="shortcut icon" href="<?= base_url();?>assets/images/favicon.ico"> -->
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+	<!-- <script type="text/javascript" src="<?= base_url();?>assets/js/jquery-1.12.1.min.js"></script> -->
 </head>
 <body>
 	<div class="container">

@@ -66,11 +66,16 @@ class Main_controller extends CI_Controller {
 
 		if($this->form_validation->run()){
 			$this->load->model('Usuarios_model');
+			$this->load->model('Caja_model');
 
 			$permisos = $this->Usuarios_model->permisos($this->input->post('usuario'), $this->input->post('password'));
+			$estado_caja = $this->Caja_model->estado_caja_ses()->estado;
+			$id_caja = $this->Caja_model->estado_caja_ses()->id_estado_caja;
 			$data = array('usuario' => $this->input->post('usuario'),
 					'permisos' => $permisos, 
-					'is_logged_in' => 1
+					'is_logged_in' => 1,
+					'estado_caja' => $estado_caja,
+					'id_caja' => $id_caja
 					);
 			$this->session->set_userdata($data);
 			redirect('Main_controller/principal');
@@ -151,7 +156,7 @@ class Main_controller extends CI_Controller {
 	/*
 	*
 	* Author: Jorge Anibal Zapata Agreda
-	* Des:
+	* Des: Actualización de usuarios
 	*
 	*/
 	public function actualizar_usuario(){
@@ -450,6 +455,16 @@ class Main_controller extends CI_Controller {
 		}
 	}
 
+	public function trae_monto_cierre(){
+		if ($this->session->userdata('is_logged_in')){
+			$this->load->model('Caja_model');
+			$monto_cierre = $this->Caja_model->monto_cierre()->monto;
+			echo $monto_cierre;
+		} else{
+			redirect('main/restringido');
+		}
+	}
+
 	public function apertura_caja(){
 		if ($this->session->userdata('is_logged_in')){
 			$this->load->model('Caja_model');
@@ -484,6 +499,26 @@ class Main_controller extends CI_Controller {
 				$data['estado'] = $this->Caja_model->estado_caja();
 			}
 			$this->load->view('caja_view', $data);
+		} else{
+			redirect('main/restringido');
+		}
+	}
+
+	public function busca_cierre_caja(){
+		if ($this->session->userdata('is_logged_in')){
+			$this->load->model('Caja_model');
+			$data['cierres_caja'] = $this->Caja_model->busca_cierre_caja($_POST['data']);
+			$this->load->view('report_cierre_cja_view', $data);
+		} else{
+			redirect('main/restringido');
+		}
+	}
+
+	public function trae_detalle_cierre_cja(){
+		if ($this->session->userdata('is_logged_in')){
+			$this->load->model('Caja_model');
+			$data['detalle_mov'] = $this->Caja_model->detalle_caja_pdf($_POST['data']-1);
+			$this->load->view('detalle_mov_cierre_cja_view', $data);
 		} else{
 			redirect('main/restringido');
 		}

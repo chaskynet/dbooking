@@ -42,7 +42,7 @@
   </div>
   <div class="col-md-8 input-group">
     <span class="input-group-addon" id="basic-addon3">Observaciones: </span>
-    <textarea rows="4" cols="50" class="form-control" id="observaciones" aria-describedby="basic-addon3">
+    <textarea rows="2" cols="50" class="form-control" id="observaciones" aria-describedby="basic-addon3">
     </textarea>
   </div>
 </div>

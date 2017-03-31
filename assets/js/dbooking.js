@@ -618,6 +618,9 @@ $(document).on('click','#save_chk_in_out',function(e){
           cliente.nacionalidad = $(this).find('#nacionalidad').val();
           cliente.ciudad = $(this).find('#ciudad').val();
           cliente.direccion = $(this).find('#direccion').val();
+          cliente.ecivil = $(this).find('#ecivil').val();
+          cliente.email = $(this).find('#email').val();
+          cliente.telefono = $(this).find('#telefono').val();
           lista_clientes.push(JSON.stringify(cliente));
         });
         datos_habitacion.push(lista_habitacion);
@@ -701,13 +704,13 @@ $(document).on("click", "#add_people", function(e){
                 "</a>"+
                 "<a href='#' id='eliminar_persona' data-id='"+ num_personas +"'><span class='badge'>X</span></a>";
   var tabulador = "<div class='collapse well' id='reg_clients"+ num_personas +"' data-cliente="+ num_personas + ">" +
-                    "<div class='row' style = 'margin-left:15px;'>"+
-                      "<div class='col-md-4 input-group form-group' style='float: left;'>"+
-                        "<span class='input-group-addon' id='label_ci_passport'>CI/Pasaporte: </span>"+
+                    "<div class='row'>"+
+                      "<div class='col-md-3 form-group'>"+
+                        "CI/Pasaporte"+
                         "<input type='text' class='form-control' id='ci_passport' aria-describedby='basic-label_ci_passport'>"+
                       "</div>"+
-                      "<div class='col-md-7 input-group form-group' style='float: right;with:66%;'>"+
-                        "<span class='input-group-addon' id='basic-addon3'>Nombre y Apellidos: </span>"+
+                      "<div class='col-md-7 form-group'>"+
+                        "Nombre y Apellidos "+
                         "<input type='text' class='form-control' id='nombre_apell' aria-describedby='basic-addon3'>"+
                       "</div>"+
                     "</div>"+
@@ -723,6 +726,18 @@ $(document).on("click", "#add_people", function(e){
                       "<div class='col-md-5 form-group'>"+
                         "Dirección: "+
                         "<input type='text' class='form-control' id='direccion' aria-describedby='basic-addon3'>"+
+                      "</div>"+
+                      "<div class='col-md-3 form-group'>"+
+                        "Estado Civil: "+
+                        "<input type='text' class='form-control' id='ecivil' aria-describedby='basic-addon3'>"+
+                      "</div>"+
+                      "<div class='col-md-5 form-group'>"+
+                        "Correo Electrónico: "+
+                        "<input type='text' class='form-control' id='email' aria-describedby='basic-addon3'>"+
+                      "</div>"+
+                      "<div class='col-md-3 form-group'>"+
+                        "Teléfono: "+
+                        "<input type='text' class='form-control' id='telefono' aria-describedby='basic-addon3'>"+
                       "</div>"+
                     "</div>"+
                   "</div>";
@@ -904,6 +919,24 @@ $(document).on("click","#caja",function(e){
   menuClose();
 });
 
+$(document).on("click", "#abrir_caja", function(){
+  $.ajax({
+        url: 'trae_monto_cierre',
+        //data: {data: datos},
+        type: "POST",
+        dataType: "html",
+        error: function(e)
+        {
+            alert('Error al Abrir caja!'+e);
+        },
+        success: function(response)
+        {
+            console.log('Monto cierre: '+response);
+            $('#monto_apertura').val(response);
+        }
+  });
+});
+
 $(document).on("click", "input[type='radio']",function(){
   $('#caja_chica input[type="text"]').prop('disabled',false);
   $('#guarda_mov').prop('disabled',false);
@@ -926,6 +959,7 @@ $(document).on("click", "#guarda_apertura", function(){
         success: function(response)
         {
             alert("Caja Abierta Correctamente");
+            $('#estado_caja').html('<button class="btn btn-primary" style="color: #fff;font-weight:bold;" id="caja">Caja ABIERTA!</button>');
             $('#contenido').load('vista_caja');
         }
   });
@@ -967,9 +1001,11 @@ $(document).on("click", "#guarda_mov", function(){
                               +'</td><td>'
                               + num_doc.val()
                               +'</td><td>'
+                              + concepto.val()
+                              +'</td><td>'
                               + monto.val()
                               +'</td></tr>';
-                $('#detalle_mov tbody').append(cadena);
+                $('#detalle_mov table tbody').append(cadena);
                 var total_caja = parseInt($("#total_caja").text());
                 if (tipo == 'ingreso') {
                   total_caja = total_caja + parseInt( monto.val() );
@@ -1012,6 +1048,7 @@ $(document).on("click", "#guarda_cierre",function(){
         success: function(response)
         {
             alert("Caja Cerrada Correctamente");
+            $('#estado_caja').html('<button class="btn btn-danger" style="color: #fff;font-weight:bold;" id="caja">Caja CERRADA!</button>');
             $('#frm_pdf_cierre_caja').submit();
             $('#contenido').load('vista_caja');
         }
@@ -1022,6 +1059,50 @@ $(document).on("click", "#guarda_cierre",function(){
 $(document).on("click","#imprimeCaja", function(e){
   e.preventDefault();
   $('#frm_pdf_caja').submit();
+});
+
+$(document).on("click", "#busca_cierre", function(){
+  if ($("#fch_bus_cierre").val().length > 0) {
+    var objeto = new Object(),
+        fch_cierre = $("#fch_bus_cierre").val();
+    objeto.fch_cierre = fch_cierre;
+    objeto = JSON.stringify(objeto);
+    $.ajax({
+          url: 'busca_cierre_caja',
+          data: {data: objeto},
+          type: "POST",
+          dataType: "html",
+          error: function(e)
+          {
+              alert('Error al traer Cierres de caja!'+e);
+          },
+          success: function(response)
+          {
+              $("#abrir_caja, #cerrar_caja").css("display","none");
+              $('#detalle_mov').html(response);
+          }
+    });
+  } else {
+    alert('Ingrece una fecha para buscar');
+  }
+});
+
+$(document).on("click", "#detalle_cierre_cja tbody tr", function(){
+  console.log($(this).attr("id"));
+  $.ajax({
+        url: 'trae_detalle_cierre_cja',
+        data: {data: $(this).attr("id")},
+        type: "POST",
+        dataType: "html",
+        error: function(e)
+        {
+            alert('Error al traer Cierres de caja!'+e);
+        },
+        success: function(response)
+        {
+            $('#detalle_mov_cierre_cja').html(response);
+        }
+  });
 });
 
 /****************************************************

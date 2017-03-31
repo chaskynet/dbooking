@@ -6,7 +6,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
 	<title>DBooking - Hotel</title>
 	<link rel="stylesheet" type="text/css" href="<?= base_url();?>assets/js/jquery-ui-1.11.4/jquery-ui.min.css">
-	<link rel="stylesheet" href="<?=base_url();?>assets/css/bootstrap/css/bootstrap.min.css">
+	<!-- <link rel="stylesheet" href="<?=base_url();?>assets/css/bootstrap/css/bootstrap.min.css"> -->
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+	<link rel="stylesheet" href="<?=base_url();?>assets/bower_components/eonasdan-bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.min.css" />
 	<link rel="stylesheet" href="<?=base_url();?>assets/css/estilos_side_menu.css">
 	<link rel="stylesheet" href="<?=base_url();?>assets/css/estilos.css">
 
@@ -27,6 +29,13 @@
 		        	<h3 class="titulo" id="fullscr">DBooking</h3>
 		        </label>
 	        </a>
+			<label style="margin-left:5%;padding-top:5px;color: #FFF;" id="estado_caja">
+	        <?php if ($this->session->userdata('estado_caja') == 'cerrado') { ?>
+		        	<button class="btn btn-danger" style="color: #fff;font-weight:bold;" id="caja">Caja CERRADA!</button>
+		        <?php } else {?>
+		        	<button class="btn btn-primary" style="color: #fff;font-weight:bold;" id="caja">Caja ABIERTA!</button>
+		     <?php } ?>
+	        </label>
         </div>
 		<div class="menu_bar quitar_float lado" >
             <a href="#" style="color:#AAA660;"> <span class="glyphicon glyphicon-menu-hamburger"></span></a>
@@ -111,10 +120,16 @@
 		</div>
 	<?php } ?>
 	</div>
-	<script type="text/javascript" src="<?=base_url();?>assets/js/jquery-1.12.1.min.js"></script>
-	<script type="text/javascript" src="<?=base_url();?>assets/js/jquery-ui-1.11.4/jquery-ui.min.js"></script>
+	<!-- <script type="text/javascript" src="<?=base_url();?>assets/js/jquery-1.12.1.min.js"></script> -->
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+	<!-- <script type="text/javascript" src="<?=base_url();?>assets/js/jquery-ui-1.11.4/jquery-ui.min.js"></script> -->
+	<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+	<script type="text/javascript" src="<?=base_url();?>assets/bower_components/moment/min/moment.min.js"></script>
 	<script type="text/javascript" src="<?=base_url();?>assets/js/jquery.printarea.js"></script>
-	<script type="text/javascript" src="<?=base_url();?>assets/css/bootstrap/js/bootstrap.min.js"></script>
+	<!-- <script type="text/javascript" src="<?=base_url();?>assets/css/bootstrap/js/bootstrap.min.js"></script> -->
+	<script type="text/javascript" src="<?=base_url();?>assets/bower_components/eonasdan-bootstrap-datetimepicker/build/js/bootstrap-datetimepicker.min.js"></script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+
 	<script type="text/javascript" src="<?php echo base_url();?>assets/js/AjaxFileUploader/ajaxfileupload.js"></script>
 	<script type="text/javascript" src="<?=base_url();?>assets/js/sidebar.js"></script>
 	<script type="text/javascript" src="<?=base_url();?>assets/js/dbooking.js"></script>
