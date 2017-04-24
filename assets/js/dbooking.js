@@ -813,7 +813,8 @@ $(document).on('change', '#nombre_apell',function(){
 * Desc: Cambia el estado de la habitación: Reservado o Mantenimiento   *
 *                         *
 *****************************************************/
-$(document).on("click", ".dropdown-menu li a", function(){
+// $(document).on("click", ".dropdown-menu li a", function(){
+  $(document).on("click", "#save_res_mante", function(){
   var objeto = new Object();
   objeto.opcion = $(this).text();
   objeto.codigo = $(this).data('codigo');

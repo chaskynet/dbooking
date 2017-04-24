@@ -6,12 +6,12 @@ var contador =1;
 function main(){
     $('.menu_bar').click(function(){
         if(contador===1){
-            $('nav').animate({
+            $('.llevar-adelante').animate({
                 left:'0'
             });
             contador=0;
         }else{
-             $('nav').animate({
+             $('.llevar-adelante').animate({
                 left:'-100%'
              }); 
              contador=1;
