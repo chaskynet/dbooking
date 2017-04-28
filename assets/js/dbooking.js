@@ -813,26 +813,47 @@ $(document).on('change', '#nombre_apell',function(){
 * Desc: Cambia el estado de la habitación: Reservado o Mantenimiento   *
 *                         *
 *****************************************************/
-// $(document).on("click", ".dropdown-menu li a", function(){
-  $(document).on("click", "#save_res_mante", function(){
+$(document).on("click", ".dropdown-menu li a", function(){
+  var tipo = $.trim($(this).attr('id')),
+      codigo = $(this).data('codigo');
+  $('.modal-body').empty();
+  if (tipo == 'chg_reserva') {
+    $('.modal-title').text('Reservar Habitación: '+ codigo);
+    $('.modal-title').data('codhab', codigo);
+    $('.modal-body').load('vista_reserva', {data: codigo});
+    //$('#save_chk_in_out').data('chkinout','chkin');
+    
+  } else if (tipo == 'chg_mantenimiento') {
+    $('.modal-title').text('Mantenimiento de Habitación: '+codigo);
+    $('.modal-title').data('codhab', codigo);
+    //$('.modal-footer #sec_actualiza').html('<button type="button" class="btn btn-info" data-dismiss="modal" id = "update_room">Actualizar</button>');
+    $('.modal-body').load('vista_mantenimiento', {data: codigo});
+    $('#save_chk_in_out').data('chkinout','chkout');
+  }
+});
+
+$(document).on("click", "#save_res_mante", function(e){
+  e.preventDefault();
   var objeto = new Object();
   objeto.opcion = $(this).text();
-  objeto.codigo = $(this).data('codigo');
+  objeto.codigo = $(this).data('idhabresman');
+  objeto.tipo = $(this).data("tipo");
   var datos = JSON.stringify(objeto);
-  $.ajax({
-        url: 'cambia_estado_hab',
-        data: {data: datos},
-        type: "POST",
-        dataType: "html",
-        error: function()
-        {
-            alert('Error al Cambiar el estado de la habitacion!');
-        },
-        success: function(response)
-        {
-          $('#contenido').load('asignar_habitaciones');
-        }
-      });
+  console.log('datos: '+datos);
+  // $.ajax({
+  //       url: 'cambia_estado_hab',
+  //       data: {data: datos},
+  //       type: "POST",
+  //       dataType: "html",
+  //       error: function()
+  //       {
+  //           alert('Error al Cambiar el estado de la habitacion!');
+  //       },
+  //       success: function(response)
+  //       {
+  //         $('#contenido').load('asignar_habitaciones');
+  //       }
+  //     });
 });
 
 /****************************************************
