@@ -33,8 +33,8 @@
 		        <input type='text' class='form-control' id='ciudad' aria-describedby='basic-addon3' value="<?=$key->ciudad;?>" disabled>
 		      </div>
 		      <div class='col-md-5 form-group'>
-		        Dirección: 
-		        <input type='text' class='form-control' id='direccion' aria-describedby='basic-addon3' value="<?=$key->direccion;?>" disabled>
+		        Empresa: 
+		        <input type='text' class='form-control' id='direccion' aria-describedby='basic-addon3' value="<?=$key->empresa;?>" disabled>
 		      </div>
 		    </div>
 	  	</div>
@@ -78,22 +78,22 @@
   <input type="text" class="form-control" id="observaciones" aria-describedby="basic-addon3" value="<?=$datos->obs?>">
 </div>
 
-<div class="row form-group col-md-12">
-	<div class="col-md-6 input-group" style="float: left;">
+<div class="row col-md-12">
+	<div class="col-md-3 input-group" style="float: left;margin-right: 2%;">
 	  <span class="input-group-addon" id="basic-addon3">Tarifa Basica: </span>
 	  <input type="text" class="form-control" id="adelanto" aria-describedby="basic-addon3" value="<?=$datos->costo?>" disabled>
 	</div>
-	<div class="col-md-5 input-group" style="float: right;">
+	<div class="col-md-3 input-group" style="float: left;margin-right: 2%;">
 	  <span class="input-group-addon" id="basic-addon3">Adelanto: </span>
 	  <input type="text" class="form-control" id="adelanto" aria-describedby="basic-addon3" value="<?=$datos->adelanto?>">
 	</div>
+	<div class="col-md-4 input-group form-group">
+	  <span class="input-group-addon" id="basic-addon3">Saldo a Pagar: </span>
+	  <input type="text" class="form-control" id="total" aria-describedby="basic-addon3" value="<?=($datos->costo*$datos->dias)-$datos->adelanto;?>">
+	</div>
 </div>
 
-<div class="input-group form-group">
-  <span class="input-group-addon" id="basic-addon3">Saldo a Pagar: </span>
-  <input type="text" class="form-control" id="total" aria-describedby="basic-addon3" value="<?=($datos->costo*$datos->dias)-$datos->adelanto;?>">
-</div>
-<div class="row form-group">
+<div class="row">
 	<div class="col-lg-4">
 	    <div class="input-group">
 	      <input type="text" class="form-control" aria-label="sucio" value="Sucio" disabled>

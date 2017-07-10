@@ -81,7 +81,6 @@ $(document).on('click', '#crear_usuario', function(e){
   crear_usuario.password = $('#password').val();
 
   $( "input[type=checkbox]:checked").each(function(){ 
-      console.log($(this).attr('id'));
       permisos_usuario = $(this).attr('id');
       lista_permisos.push(permisos_usuario);
   });
@@ -104,8 +103,6 @@ $(document).on('click', '#crear_usuario', function(e){
         },
         success: function(response)
         {
-          console.log('Usuario creado correctamente! '+response);
-          //alert('Usuario creado correctamente!');
           $('#usuario').val('');
           $('#nombre').val('');
           $('#apaterno').val('');
@@ -192,7 +189,6 @@ $(document).on('click', '#actualizar_usuario', function(){
   }
 
   $( "input[type=checkbox]:checked").each(function(){ 
-    //console.log($(this).attr('id'));
     permisos_usuario = $(this).attr('id');
     lista_permisos.push(permisos_usuario);
   });
@@ -201,9 +197,7 @@ $(document).on('click', '#actualizar_usuario', function(){
   
   usuario.push(datos_usuario);
   usuario.push(lista_permisos);
-
   var update_usuario = JSON.stringify(usuario);
-
   $.ajax({
         url: 'actualizar_usuario',
         data: {data: update_usuario},
@@ -321,26 +315,24 @@ $(document).on("click","#nueva_hab", function(e){
         $('#habitaciones_conf tbody').empty();
         var objeto = JSON.parse(response);
         var j = 1;
-        // var cadena = '';
         $.each(objeto, function(i, item) {
           var cadena = "<tr id= '"+item.id_habitacion+"'><td>"+j+ '&nbsp; <a href="#" id="elimina_hab"><span class="glyphicon glyphicon-trash"></span></a>'+
                     "</td>"+
-                    "<td>"+item.piso_hab+
+                    "<td id='piso_hab'>"+item.piso_hab+
                     "</td>"+
-                    "<td><a href='#' data-toggle='modal' data-target='#modal_edit_conf_habitacion' id='cod_hab'>"+item.codigo+
+                    "<td><a href='#' data-toggle='modal' data-target='#modal_edit_conf_habitacion' id='edit_conf_habitacion'>"+item.codigo+
                     "</td>"+
-                    "<td>"+item.descripcion+
+                    "<td id='desc_hab'>"+item.descripcion+
                     "</td>"+
-                    "<td>"+item.costo+
+                    "<td id='costo_hab'>"+item.costo+
                     "</td>"+
-                    "<td>"+item.estado+
+                    "<td id='estado_hab'>"+item.estado+
                     "</td></tr>";
           j++;
           $('#habitaciones_conf tbody').append(cadena);
         });
       }
   });
-
 });
 
 /*********** Sección tipos de Habitación ***********/
@@ -356,7 +348,6 @@ $(document).on('click','#edit_tipo',function(e){
   $("#ed_desc_tipo_hab").val(tipo_desc.text());
   $("#ed_num_personas").val(num_personas.text());
   $("#ed_costo_hab").val(costo.text());
-
 });
 
 $(document).on('click', '#guarda_tipo', function(){
@@ -458,7 +449,6 @@ $(document).on("click", "#edit_hab", function(){
       objeto.id_habitacion = id_hab;
       objeto.piso_hab = piso_hab;
       objeto.cod_hab = cod_hab;
-      //objeto.desc_hab = desc_hab;
       objeto.tipo_hab = tipo_hab;
       objeto.estado_hab = estado_hab;
       var datos = JSON.stringify(objeto);
@@ -617,7 +607,7 @@ $(document).on('click','#save_chk_in_out',function(e){
           cliente.rsocial = $(this).find('#nombre_apell').val();
           cliente.nacionalidad = $(this).find('#nacionalidad').val();
           cliente.ciudad = $(this).find('#ciudad').val();
-          cliente.direccion = $(this).find('#direccion').val();
+          cliente.empresa = $(this).find('#empresa').val();
           cliente.ecivil = $(this).find('#ecivil').val();
           cliente.email = $(this).find('#email').val();
           cliente.telefono = $(this).find('#telefono').val();
@@ -649,7 +639,6 @@ $(document).on('click','#save_chk_in_out',function(e){
         var estado_hab = $("input[name='estado_hab']:checked");
         objeto.estado_hab = estado_hab.attr('id');
         datos = JSON.stringify(objeto);
-        console.log();
         if (estado_hab.length > 0) {
           $.ajax({
             url: 'guarda_checkout',
@@ -707,7 +696,7 @@ $(document).on("click", "#add_people", function(e){
                     "<div class='row'>"+
                       "<div class='col-md-3 form-group'>"+
                         "CI/Pasaporte"+
-                        "<input type='text' class='form-control' id='ci_passport' aria-describedby='basic-label_ci_passport'>"+
+                        "<input type='text' class='form-control' id='ci_passport' aria-describedby='basic-label_ci_passport' data-cliente="+num_personas+">"+
                       "</div>"+
                       "<div class='col-md-7 form-group'>"+
                         "Nombre y Apellidos "+
@@ -724,8 +713,8 @@ $(document).on("click", "#add_people", function(e){
                         "<input type='text' class='form-control' id='ciudad' aria-describedby='basic-addon3'>"+
                       "</div>"+
                       "<div class='col-md-5 form-group'>"+
-                        "Dirección: "+
-                        "<input type='text' class='form-control' id='direccion' aria-describedby='basic-addon3'>"+
+                        "Empresa: "+
+                        "<input type='text' class='form-control' id='empresa' aria-describedby='basic-addon3'>"+
                       "</div>"+
                       "<div class='col-md-3 form-group'>"+
                         "Estado Civil: "+
@@ -759,7 +748,8 @@ $(document).on("click","#eliminar_persona", function(e){
 */
 $(document).on('change', '#ci_passport',function(){
    var url = 'carga_rsocial';
-   var nit_cliente = $(this);
+   var nit_cliente = $(this),
+        cliente = $(this).data('cliente');
    if (nit_cliente.length>0) {
      $.ajax({
           url: url,
@@ -774,7 +764,11 @@ $(document).on('change', '#ci_passport',function(){
           {
               var objeto = JSON.parse(response);
               $.each(objeto, function(i, item) {
-                $('#nombre_apell').val(item.rsocial);
+                $('#reg_clients'+cliente).find('#nombre_apell').val(item.rsocial);
+                $('#reg_clients'+cliente).find('#nacionalidad').val(item.pais);
+                $('#reg_clients'+cliente).find('#ciudad').val(item.ciudad);
+                $('#reg_clients'+cliente).find('#empresa').val(item.empresa);
+                // $('#nacionalidad').val(item.pais);
               });
           }
       });
@@ -815,45 +809,57 @@ $(document).on('change', '#nombre_apell',function(){
 *****************************************************/
 $(document).on("click", ".dropdown-menu li a", function(){
   var tipo = $.trim($(this).attr('id')),
-      codigo = $(this).data('codigo');
+      codigo = $(this).data('codigo'),
+      id_hab = $(this).data('idhab'),
+      objeto = new Object();
+  objeto.codigo = codigo;
+  objeto.id_hab = id_hab;
+  objeto = JSON.stringify(objeto);
   $('.modal-body').empty();
   if (tipo == 'chg_reserva') {
     $('.modal-title').text('Reservar Habitación: '+ codigo);
     $('.modal-title').data('codhab', codigo);
-    $('.modal-body').load('vista_reserva', {data: codigo});
-    //$('#save_chk_in_out').data('chkinout','chkin');
+    $('.modal-title').data('id_hab', id_hab);
+    $("#save_res_mante").data('tipo',tipo);
+    $("#save_res_mante").data('idhabresman',codigo);
+    $('.modal-body').load('vista_reserva', {data: objeto});
+    $("input#id_hab").val(id_hab);
     
   } else if (tipo == 'chg_mantenimiento') {
     $('.modal-title').text('Mantenimiento de Habitación: '+codigo);
     $('.modal-title').data('codhab', codigo);
-    //$('.modal-footer #sec_actualiza').html('<button type="button" class="btn btn-info" data-dismiss="modal" id = "update_room">Actualizar</button>');
-    $('.modal-body').load('vista_mantenimiento', {data: codigo});
-    $('#save_chk_in_out').data('chkinout','chkout');
+    $('.modal-title').data('id_hab', id_hab);
+    $("#save_res_mante").data('tipo',tipo);
+    $("#save_res_mante").data('idhabresman',codigo);
+    $('.modal-body').load('vista_mantenimiento', {data: objeto});
+    $("input#id_hab").val(id_hab);
   }
 });
 
 $(document).on("click", "#save_res_mante", function(e){
   e.preventDefault();
-  var objeto = new Object();
-  objeto.opcion = $(this).text();
-  objeto.codigo = $(this).data('idhabresman');
-  objeto.tipo = $(this).data("tipo");
-  var datos = JSON.stringify(objeto);
-  console.log('datos: '+datos);
-  // $.ajax({
-  //       url: 'cambia_estado_hab',
-  //       data: {data: datos},
-  //       type: "POST",
-  //       dataType: "html",
-  //       error: function()
-  //       {
-  //           alert('Error al Cambiar el estado de la habitacion!');
-  //       },
-  //       success: function(response)
-  //       {
-  //         $('#contenido').load('asignar_habitaciones');
-  //       }
-  //     });
+  $("#modal_reserva_mantenimiento form").submit();
+
+});
+
+$(document).on("submit", "#modal_reserva_mantenimiento form", function(e){
+  e.preventDefault();
+  var donde = $(this).prop('id');
+  $.post(donde, $(this).serialize(), function(data){
+      var objeto = JSON.parse(data);
+      if (objeto.status == 'OK') {
+          $('div#error_form_resmante').html(objeto.msg);
+          $("#modal_reserva_mantenimiento form").trigger('reset');
+      } else if (objeto.status == 'NOK') {
+          $('div#error_form_resmante').html(objeto.msg);
+      }
+  });
+});
+
+$(document).on('hide.bs.modal','#modal_reserva_mantenimiento', function(e){
+    $('body').removeClass('modal-open');
+    $('.modal-backdrop').remove();
+    $('#contenido').load('asignar_habitaciones');
 });
 
 /****************************************************
@@ -953,7 +959,6 @@ $(document).on("click", "#abrir_caja", function(){
         },
         success: function(response)
         {
-            console.log('Monto cierre: '+response);
             $('#monto_apertura').val(response);
         }
   });
@@ -1040,7 +1045,6 @@ $(document).on("click", "#guarda_mov", function(){
                 num_doc.val('');
                 monto.val('');
                 concepto.val('');
-                // $('#contenido').load('vista_caja');
             }
       });
   } else {
@@ -1077,6 +1081,9 @@ $(document).on("click", "#guarda_cierre",function(){
   });
 });
 
+$(document).on("click", "#imprime_mov_caja", function(){
+  $('#frm_pdf_cierre_caja').submit();
+});
 
 $(document).on("click","#imprimeCaja", function(e){
   e.preventDefault();
@@ -1110,7 +1117,6 @@ $(document).on("click", "#busca_cierre", function(){
 });
 
 $(document).on("click", "#detalle_cierre_cja tbody tr", function(){
-  console.log($(this).attr("id"));
   $.ajax({
         url: 'trae_detalle_cierre_cja',
         data: {data: $(this).attr("id")},

@@ -47,8 +47,8 @@
 		  <input type="text" class="form-control" id="ed_ciudad" aria-describedby="basic-addon3">
 		</div>
 		<div class="input-group form-group">
-		  <span class="input-group-addon" id="basic-addon3">Dirección: </span>
-		  <input type="text" class="form-control" id="ed_direccion" aria-describedby="basic-addon3">
+		  <span class="input-group-addon" id="basic-addon3">Empresa: </span>
+		  <input type="text" class="form-control" id="ed_empresa" aria-describedby="basic-addon3">
 		</div>
 		<div class="input-group form-group">
 		  <span class="input-group-addon" id="basic-addon3">Teléfono: </span>
@@ -77,7 +77,7 @@
 				<th>CI / Pasaporte</th>
 				<th>Pais</th>
 				<th>Ciudad</th>
-				<th>Direccion</th>
+				<th>Empresa</th>
 				<th>Telefono</th>
 			</tr>
 		</thead>
@@ -89,7 +89,7 @@
 				<td id="num_doc_cliente"><?=$key->nit_cliente;?></td>
 				<td id="pais_cliente"><?=$key->pais;?></td>
 				<td id="ciudad_cliente"><?=$key->ciudad;?></td>
-				<td id="direccion_cliente"><?=$key->direccion;?></td>
+				<td id="empresa_cliente"><?=$key->empresa;?></td>
 				<td id="telefono_cliente"><?=$key->telefono;?></td>
 			</tr>
 			<?php } ?>

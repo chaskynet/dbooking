@@ -198,6 +198,7 @@ class Main_controller extends CI_Controller {
 			}
 			$data['pisos'] = $this->Habitaciones_model->pisos_hab();
 			$data['habitaciones'] = $this->Habitaciones_model->lista_habitaciones($piso);
+			$data['reservadas'] = $this->Habitaciones_model->lista_hab_reservadas();
 			$this->load->view('habitaciones_view', $data);
 		} else{
 			redirect('main/restringido');
@@ -356,6 +357,136 @@ class Main_controller extends CI_Controller {
 		}
 	}
 
+	public function vista_reserva(){
+		if ($this->session->userdata('is_logged_in')){
+			$datos = json_decode($_POST['data']);
+			$data['id_hab'] = $datos->id_hab;
+			$this->load->view('reserva_view', $data);
+		} else{
+			redirect('main/restringido');
+		}
+	}
+
+	public function vista_mantenimiento(){
+		if ($this->session->userdata('is_logged_in')){
+			$datos = json_decode($_POST['data']);
+			$data['id_hab'] = $datos->id_hab;
+			$this->load->view('mantenimiento_view',$data);
+		} else{
+			redirect('main/restringido');
+		}
+	}
+
+	public function form_reserva_hab(){
+		if ($this->session->userdata('is_logged_in')){
+			if (!$this->input->is_ajax_request()) { exit('Requerimiento No Valido'); }
+			$FormRules = array(
+					array(
+	                    'field' => 'clt_1',
+	                    'label' => 'Cliente',
+	                    'rules' => 'required'
+	                ),
+	                array(
+	                    'field' => 'fch_reserva',
+	                    'label' => 'Fecha',
+	                    'rules' => 'required'
+	                ),
+	                array(
+	                    'field' => 'hr_reserva',
+	                    'label' => 'Hora',
+	                    'rules' => 'required'
+	                )
+            );
+			$this->form_validation->set_rules($FormRules);
+			if ($this->form_validation->run() == TRUE)
+            {
+            	$fch = date_create($this->input->post('fch_reserva'));
+            	$fch = date_format($fch, 'Y-m-d');
+            	$id = $this->input->post('id_hab');
+				// $data = array(
+				// 	'id_habitacion' => $this->input->post('id_hab'),
+				// 	'cliente'    	=> $this->input->post('clt_1'),
+				// 	'fch_reserva'  	=> $fch,
+				// 	'hr_reserva'	=> $this->input->post('hr_reserva'),
+				// 	'fch_registro'=> date("Y-m-d h:i:s"),
+				// 	'usuario'		=> $this->session->userdata('usuario')
+				// );
+				$data = array(
+					'obs'    		=> $this->input->post('clt_1'),
+					'estado'		=> 'Reservado',
+					'fch_reserva'  	=> $fch,
+					'hr_reserva'	=> $this->input->post('hr_reserva'),
+				);
+            	$nueva_reserva = $this->Habitaciones_model->guardaReserva($id, $data);
+            	$status = 'OK';
+                $msg = '<div class="col-md-7 col-md-offset-3 alert alert-success alert-dismissible text-center" role="alert" style= "font-size:13px;">
+                			<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+	                			<span aria-hidden="true">&times;</span>
+	                		</button>
+                			Reserva Guardada Correctamente!
+                		</div>';
+                echo json_encode( array('status' => $status, 'msg' => $msg));
+            } else{
+            	$status = 'NOK';
+            	$errores = validation_errors();
+                $msg = "<div class='col-md-7 col-md-offset-3 alert alert-danger alert-dismissible' role='alert' style='font-size:13px;'>
+                		<button type='button' class='close' data-dismiss='alert' aria-label='Close'>
+                			<span aria-hidden='true'>&times;</span>
+                		</button>
+						$errores
+                </div>";
+                echo json_encode( array('status' => $status, 'msg' => $msg));
+            }
+		} else{
+			redirect('main/restringido');
+		}
+	}
+
+	public function form_mante_hab(){
+		if ($this->session->userdata('is_logged_in')){
+			if (!$this->input->is_ajax_request()) { exit('Requerimiento No Valido'); }
+			$FormRules = array(
+	                array(
+	                    'field' => 'motivo_mantenimiento',
+	                    'label' => 'Motivo',
+	                    'rules' => 'required'
+	                )
+            );
+			$this->form_validation->set_rules($FormRules);
+			if ($this->form_validation->run() == TRUE)
+            {
+            	$id = $this->input->post('id_hab');
+				$data = array(
+					'id_habitacion' => $id,
+					'estado'		=> 'Mantenimiento',
+					'obs'    		=> $this->input->post('motivo_mantenimiento')
+				);
+            	$this->Habitaciones_model->guardaMantenimiento($id, $data);
+            	$status = 'OK';
+                $msg = '<div class="col-md-7 col-md-offset-3 alert alert-success alert-dismissible text-center" role="alert" style= "font-size:16px;">
+                			<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+	                			<span aria-hidden="true">&times;</span>
+	                		</button>
+                			Mantenimiento Guardado Correctamente!
+                		</div>';
+                echo json_encode( array('status' => $status, 'msg' => $msg));
+            } else{
+            	$status = 'NOK';
+            	$errores = validation_errors();
+                $msg = "<div class='col-md-7 col-md-offset-3 alert alert-danger alert-dismissible' role='alert'>
+                		<button type='button' class='close' data-dismiss='alert' aria-label='Close'>
+                			<span aria-hidden='true'>&times;</span>
+                		</button>
+						$errores
+                </div>";
+                echo json_encode( array('status' => $status, 'msg' => $msg));
+            }
+		} else{
+			redirect('main/restringido');
+		}
+	}
+
+
 	public function guarda_asignacion(){
 		if ($this->session->userdata('is_logged_in')) {
 			$datos = $_POST['data'];
@@ -478,6 +609,7 @@ class Main_controller extends CI_Controller {
 		}
 	}
 
+	//*** Funcion de Apertura de Caja *****//
 	public function guarda_mov_caja(){
 		if ($this->session->userdata('is_logged_in')){
 			$this->load->model('Caja_model');
@@ -491,6 +623,7 @@ class Main_controller extends CI_Controller {
 		}
 	}
 
+	//*** Funcion de Cierre de Caja *****//
 	public function cierre_caja(){
 		if ($this->session->userdata('is_logged_in')){
 			$this->load->model('Caja_model');
@@ -534,7 +667,7 @@ class Main_controller extends CI_Controller {
 			ob_clean();
 			$id_estado = $this->input->post('id_estado_caja');
 			$data['detalle_mov'] = $this->Caja_model->detalle_caja_pdf($id_estado);
-			$mpdf->WriteHTML($this->load->view('cierre_caja_pdf_view', $data, true));
+			$mpdf->WriteHTML($this->load->view('detalle_caja_pdf', $data, true));
 			$mpdf->AutoPrint(true);
 			$mpdf->Output();
 			ob_clean();

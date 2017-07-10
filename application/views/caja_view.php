@@ -99,9 +99,15 @@
 	      </form>
 	      <ul class="nav navbar-nav navbar-right">
 	        <li>
-	        <div class="form-group" style="margin-top: 5%;">
-	        	<?=($estado[0]->estado == 'cerrado')?"<button class='btn btn-primary' id='abrir_caja' data-toggle='modal' data-target='#modal_apertura_caja'>ABRIR CAJA</button>":"<button class='btn btn-danger' id='cerrar_caja' data-toggle='modal' data-target='#modal_cierre_caja'>CERRAR CAJA</button><form action='pdf_cierre_caja' target='_blank' method='post' id='frm_pdf_cierre_caja' name='frm_pdf_cierre_caja'><input type='hidden' id='id_estado_caja' name='id_estado_caja' value='".$estado[0]->id_estado_caja."'></form>";?>
-	        </div>
+		        <div class="form-group" style="margin-top: 5%;">
+	        	<?=($estado[0]->estado == 'cerrado')?"<button class='btn btn-primary' id='abrir_caja' data-toggle='modal' data-target='#modal_apertura_caja'>ABRIR CAJA</button>":"<button class='btn btn-danger' id='cerrar_caja' data-toggle='modal' data-target='#modal_cierre_caja'>CERRAR CAJA</button>";?>
+		        </div>
+	        </li>
+	        <li>
+	        	<div class="form-group" style="margin-top: 5%;margin-left: 2%;">
+	        		<button class="btn btn-info" id="imprime_mov_caja"><span class="glyphicon glyphicon-print" aria-hidden="true"></span> Imprimir Reporte</button>
+	        		<form action='pdf_cierre_caja' target='_blank' method='post' id='frm_pdf_cierre_caja' name='frm_pdf_cierre_caja'><input type='hidden' id='id_estado_caja' name='id_estado_caja' value='<?=$estado[0]->id_estado_caja;?>'></form>
+	        	</div>
 	        </li>
 	        <!-- <li class="dropdown">
 	          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Dropdown <span class="caret"></span></a>
@@ -176,7 +182,7 @@
 					} ?>
 				<tr>
 					<td colspan="5">Total</td>
-					<td id="total_caja"><?=$total;?></td>
+					<td id="total_caja"><?=number_format($total,2);?></td>
 				</tr>
 			</tfoot>
 			<tbody>

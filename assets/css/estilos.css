@@ -16,10 +16,6 @@ body{
 	padding-bottom: 2%;	
 }
 
-#contenido{
-    width: 90%;
-}
-
 .panel_habitaciones{
 	width: 20%;
 	display:inline-table;
