@@ -580,6 +580,17 @@ $(document).on("click", "#habs_por_piso", function(){
 /***************************************************
 *
 * Author: Jorge Anibal Zapata Agreda
+* Des: Boton de busqueda habitaciones por estado
+*
+***************************************************/
+$(document).on("click", "#busqueda_habs_estado", function(){
+  var estado_hab = $(this).data('hab_estado');
+  $('#contenido').load('busca_hab_estado',{data:estado_hab});
+});
+
+/***************************************************
+*
+* Author: Jorge Anibal Zapata Agreda
 * Des: Boton de Guardado para check in o Check out
 *
 ***************************************************/
@@ -662,23 +673,32 @@ $(document).on('click','#save_chk_in_out',function(e){
         }
         break;
     case 'chkhab':
-        var cod_habitacion = $('.modal-title').data('codhab');
-        $.ajax({
-          url: 'guarda_habilitacion',
-          data: {data: cod_habitacion},
-          type: "POST",
-          dataType: "html",
-          error: function()
-          {
-              alert('Error al habilitar la habitacion!');
-          },
-          success: function(response)
-          {
-            $('body').removeClass('modal-open');
-            $('.modal-backdrop').remove();
-            $('#contenido').load('asignar_habitaciones');
-          }
-        });
+        var cod_habitacion = $('.modal-title').data('codhab'),
+            reporte = $('#rep_camarera').val(),
+            objeto = new Object();
+        if (reporte.length > 0) {
+          objeto.cod_habitacion = cod_habitacion;
+          objeto.reporte = reporte;
+          objeto = JSON.stringify(objeto);
+          $.ajax({
+            url: 'guarda_habilitacion',
+            data: {data: objeto},
+            type: "POST",
+            dataType: "html",
+            error: function()
+            {
+                alert('Error al habilitar la habitacion!');
+            },
+            success: function(response)
+            {
+              $('body').removeClass('modal-open');
+              $('.modal-backdrop').remove();
+              $('#contenido').load('asignar_habitaciones');
+            }
+          });
+        } else{
+          alert('Debes ingresar el reporte!');
+        }
         break;
   }
 });
@@ -959,7 +979,9 @@ $(document).on("click", "#abrir_caja", function(){
         },
         success: function(response)
         {
-            $('#monto_apertura').val(response);
+            var objeto = JSON.parse(response);
+            $('#monto_apertura').val(objeto.monto);
+            $('#observaciones_apertura').val(objeto.obs);
         }
   });
 });
@@ -970,8 +992,11 @@ $(document).on("click", "input[type='radio']",function(){
 });
 
 $(document).on("click", "#guarda_apertura", function(){
-  var objeto = new Object();
-  objeto.monto = $("#monto_apertura").val();
+  var objeto = new Object(),
+      monto_apertura = $("#monto_apertura").val();
+  monto_apertura = monto_apertura.replace(',', '');
+  monto_apertura = monto_apertura.replace(',', '');
+  objeto.monto = monto_apertura;
   objeto.obs = $("#observaciones_apertura").val();
   var datos = JSON.stringify(objeto);
   $.ajax({
@@ -1016,7 +1041,7 @@ $(document).on("click", "#guarda_mov", function(){
             dataType: "html",
             error: function(e)
             {
-                alert('Error al Guardar Movimiento de caja!'+e);
+                alert('Error al Guardar Movimiento de caja! -> '+e);
             },
             success: function(response)
             {
@@ -1033,14 +1058,16 @@ $(document).on("click", "#guarda_mov", function(){
                               + monto.val()
                               +'</td></tr>';
                 $('#detalle_mov table tbody').append(cadena);
-                var total_caja = parseInt($("#total_caja").text());
+                var total_caja = $("#total_caja").text();
+                total_caja = total_caja.replace(',', '');
+                total_caja = total_caja.replace(',', '');
                 if (tipo == 'ingreso') {
-                  total_caja = total_caja + parseInt( monto.val() );
+                  total_caja = parseFloat(total_caja) + parseFloat( monto.val() );
                 } else{
-                  total_caja = total_caja - parseInt( monto.val() );
+                  total_caja = parseFloat(total_caja) - parseFloat( monto.val() );
                 }
 
-                $("#total_caja").text(total_caja);
+                $("#total_caja").text(number_format(total_caja,2) );
                 tipo_doc.val('');
                 num_doc.val('');
                 monto.val('');
@@ -1058,8 +1085,11 @@ $(document).on("click","#cerrar_caja", function(){
 });
 
 $(document).on("click", "#guarda_cierre",function(){
+  var monto_cierre = $("#monto_cierre").val();
+  monto_cierre = monto_cierre.replace(',', '');
+  monto_cierre = monto_cierre.replace(',', '');
   var objeto = new Object();
-  objeto.monto_cierre = $("#monto_cierre").val();
+  objeto.monto_cierre = monto_cierre;
   objeto.obs_cierre = $("#observaciones_cierre").val();
   var datos = JSON.stringify(objeto);
   $.ajax({

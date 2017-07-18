@@ -174,7 +174,8 @@ class Habitaciones_model extends CI_Model{
 	}
 
 	public function guarda_habilitacion($dato){
-		$query = $this->db->query("UPDATE habitaciones SET estado = 'libre' where codigo = '$dato'");
+		$dato = json_decode($dato);
+		$query = $this->db->query("UPDATE habitaciones SET estado = 'libre', obs = '$dato->reporte' where codigo = '$dato->cod_habitacion'");
 		return $query;
 	}
 
@@ -226,6 +227,25 @@ class Habitaciones_model extends CI_Model{
 	public function lista_hab_reservadas(){
 		$this->db->where('estado', 'Reservado');
 		$query = $this->db->get('habitaciones');
+		return $query->result();
+	}
+
+	public function lista_hab_estado($estado){
+		if ($estado == 'mantesucio') {
+			$condicion = "WHERE (estado = 'sucio' or estado = 'Mantenimiento')";
+		} else{
+			$condicion = "WHERE estado = '$estado'";
+		}
+		$query = $this->db->query("SELECT h.id_habitacion, h.piso_hab, h.codigo,
+									(select t.descripcion 
+										from tipo_habitacion t 
+										where t.id_tipo_hab = h.id_tipo_hab) as descripcion,
+									(select t.costo 
+										from tipo_habitacion t 
+										where t.id_tipo_hab = h.id_tipo_hab) as costo, 
+									h.estado, 
+									IFNULL((select k.obs from kardex_hab k where k.cod_hab = h.codigo and k.vigente = 1),'') as obs 
+									FROM `habitaciones` h $condicion");
 		return $query->result();
 	}
 }

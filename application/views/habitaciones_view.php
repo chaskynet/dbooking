@@ -41,15 +41,31 @@
 <!-- *** FIN venta modal para Edicion de Conf de Habitación *** -->
 
 <div class="row-fluid">
-	<?php
-		foreach ($pisos as $key) {
-	?>
-		<button class="btn btn-primary" type="button" id="habs_por_piso" data-piso = "<?=$key->piso_hab;?>">
-		  Piso <span class="badge"><?=$key->piso_hab;?></span> <?=$key->num_hab;?>
+	<section class="col-md-8">
+		<?php
+			foreach ($pisos as $key) {
+		?>
+			<button class="btn btn-primary" type="button" id="habs_por_piso" data-piso = "<?=$key->piso_hab;?>">
+			  Piso <span class="badge"><?=$key->piso_hab;?></span> <?=$key->num_hab;?>
+			</button>
+		<?php
+			}
+		?>
+	</section>
+	<section class="col-md-4">
+		<button class="btn btn-success" type="button" id="busqueda_habs_estado" data-hab_estado = "libre">
+		  Libres
 		</button>
-	<?php
-		}
-	?>
+		<button class="btn btn-primary" type="button" id="busqueda_habs_estado" data-hab_estado = "Reservado">
+		  Reservadas
+		</button>
+		<button class="btn btn-danger" type="button" id="busqueda_habs_estado" data-hab_estado = "ocupado">
+		  Ocupadas
+		</button>
+		<button class="btn btn-warning" type="button" id="busqueda_habs_estado" data-hab_estado = "mantesucio">
+		  Mante/Sucio
+		</button>
+	</section>
 </div>
 <div class="row-fluid">
 	<div class="col-md-8" style="padding-left: 0;;">

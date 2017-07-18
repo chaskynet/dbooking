@@ -198,7 +198,19 @@ class Main_controller extends CI_Controller {
 			}
 			$data['pisos'] = $this->Habitaciones_model->pisos_hab();
 			$data['habitaciones'] = $this->Habitaciones_model->lista_habitaciones($piso);
-			$data['reservadas'] = $this->Habitaciones_model->lista_hab_reservadas();
+			$data['reservadas'] = $this->Habitaciones_model->lista_hab_reservadas('Reservado');
+			$this->load->view('habitaciones_view', $data);
+		} else{
+			redirect('main/restringido');
+		}
+	}
+
+	public function busca_hab_estado(){
+		if ($this->session->userdata('is_logged_in')) {
+			$estado = $_POST['data'];
+			$data['pisos'] = $this->Habitaciones_model->pisos_hab();
+			$data['habitaciones'] = $this->Habitaciones_model->lista_hab_estado($estado);
+			$data['reservadas'] = $this->Habitaciones_model->lista_hab_reservadas('Reservado');
 			$this->load->view('habitaciones_view', $data);
 		} else{
 			redirect('main/restringido');
@@ -589,8 +601,8 @@ class Main_controller extends CI_Controller {
 	public function trae_monto_cierre(){
 		if ($this->session->userdata('is_logged_in')){
 			$this->load->model('Caja_model');
-			$monto_cierre = $this->Caja_model->monto_cierre()->monto;
-			echo $monto_cierre;
+			$monto_cierre = $this->Caja_model->monto_cierre();
+			echo json_encode($monto_cierre);
 		} else{
 			redirect('main/restringido');
 		}
