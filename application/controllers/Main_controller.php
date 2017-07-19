@@ -257,6 +257,16 @@ class Main_controller extends CI_Controller {
 		}
 	}
 
+	public function reporte_camarera(){
+		if ($this->session->userdata('is_logged_in')) {
+			$data['pisos'] = $this->Habitaciones_model->pisos_hab();
+			$data['repo_camarera'] = $this->Habitaciones_model->repo_camarera();
+			$this->load->view('report_camarera_view', $data);
+		} else{
+			redirect('main/restringido');
+		}
+	}
+
 	public function guarda_hab(){
 		if ($this->session->userdata('is_logged_in')) {
 			$datos = $_POST['data'];

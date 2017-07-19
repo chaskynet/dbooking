@@ -175,8 +175,11 @@ class Habitaciones_model extends CI_Model{
 
 	public function guarda_habilitacion($dato){
 		$dato = json_decode($dato);
+		$usuario = $this->session->userdata["usuario"];
 		$query = $this->db->query("UPDATE habitaciones SET estado = 'libre', obs = '$dato->reporte' where codigo = '$dato->cod_habitacion'");
-		return $query;
+		$query_reporte = $this->db->query("INSERT INTO rep_camarera (id_repcamarera, cod_hab, fch_reporte, reporte, usuario) 
+									VALUES('','$dato->cod_habitacion', now(), '$dato->reporte', '$usuario')");
+		return $query_reporte;
 	}
 
 	public function actualizar_habitacion($dato){
@@ -246,6 +249,11 @@ class Habitaciones_model extends CI_Model{
 									h.estado, 
 									IFNULL((select k.obs from kardex_hab k where k.cod_hab = h.codigo and k.vigente = 1),'') as obs 
 									FROM `habitaciones` h $condicion");
+		return $query->result();
+	}
+
+	public function repo_camarera(){
+		$query = $this->db->query("SELECT * FROM rep_camarera");
 		return $query->result();
 	}
 }

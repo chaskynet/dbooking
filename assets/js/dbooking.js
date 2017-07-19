@@ -258,6 +258,11 @@ $(document).on('click','#adm_habitaciones', function(e){
   menuClose();
 });
 
+$(document).on('click','#rep_camarera', function(e){
+  e.preventDefault();
+  $('#contenido_habitaciones').load('reporte_camarera');
+});
+
 /*********** Sección de Habitación ***********/
 
 /**** Registra un nuevo tipo de habitacion *****/
@@ -473,8 +478,8 @@ $(document).on("click", "#edit_hab", function(){
       });
   }
 });
-
 /********* Fin Edicion de Habitaciones **********/
+
 $(document).on("click", "#elimina_hab", function(){
   var objeto = $(this).parents().get(1);
   var id_tipo = $(objeto).attr('id');
