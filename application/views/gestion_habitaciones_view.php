@@ -36,6 +36,7 @@
 		  	<option value="reservado">Reservado</option>
 		  	<option value="mantenimiento">Mantenimiento</option>
 		  	<option value="sucio">Sucio</option>
+		  	<option value="alquilado">Alquilado</option>
 		  </select>
 		</div>
       </div>
@@ -146,6 +147,8 @@
 		  	<option value="ocupado">Ocupado</option>
 		  	<option value="reservado">Reservado</option>
 		  	<option value="mantenimiento">Mantenimiento</option>
+		  	<option value="sucio">Sucio</option>
+		  	<option value="alquilado">Alquilado</option>
 		  </select>
 		</div>
       </div>

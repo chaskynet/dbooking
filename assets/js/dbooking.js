@@ -546,7 +546,18 @@ $(document).on('click','#btn_chk_in_out',function(){
   };
 });
 
+/***************************************************
+*
+* Author: Jorge Anibal Zapata Agreda
+* Des: Busqueda de Habitacion
+*
+***************************************************/
+$(document).on("keyup", "#buscar_habitacion", function(e){
 
+  if (e.which == 13) {
+    $('#contenido').load('buscar_habitacion',{data:$(this).val()});
+  }
+});
 /***************************************************
 *
 * Author: Jorge Anibal Zapata Agreda
@@ -618,7 +629,7 @@ $(document).on('click','#save_chk_in_out',function(e){
         habitacion.adelanto = $('#adelanto').val();
         habitacion.observaciones = $('#observaciones').val();
         lista_habitacion.push(habitacion);
-        $( ".collapse").each(function(){ 
+        $("div[name='tabulador']").each(function(){ 
           cliente.nit_cliente = $(this).find('#ci_passport').val();
           cliente.rsocial = $(this).find('#nombre_apell').val();
           cliente.nacionalidad = $(this).find('#nacionalidad').val();
@@ -628,6 +639,7 @@ $(document).on('click','#save_chk_in_out',function(e){
           cliente.email = $(this).find('#email').val();
           cliente.telefono = $(this).find('#telefono').val();
           lista_clientes.push(JSON.stringify(cliente));
+          console.log('clientes: '+lista_clientes);
         });
         datos_habitacion.push(lista_habitacion);
         datos_habitacion.push(lista_clientes);
@@ -717,7 +729,7 @@ $(document).on("click", "#add_people", function(e){
                     "<img src='../assets/images/people.png' class='people'>"+
                 "</a>"+
                 "<a href='#' id='eliminar_persona' data-id='"+ num_personas +"'><span class='badge'>X</span></a>";
-  var tabulador = "<div class='collapse well' id='reg_clients"+ num_personas +"' data-cliente="+ num_personas + ">" +
+  var tabulador = "<div class='collapse well' name='tabulador' id='reg_clients"+ num_personas +"' data-cliente="+ num_personas + ">" +
                     "<div class='row'>"+
                       "<div class='col-md-3 form-group'>"+
                         "CI/Pasaporte"+
@@ -858,6 +870,13 @@ $(document).on("click", ".dropdown-menu li a", function(){
     $("#save_res_mante").data('idhabresman',codigo);
     $('.modal-body').load('vista_mantenimiento', {data: objeto});
     $("input#id_hab").val(id_hab);
+    
+  } else if (tipo == 'chg_liberar') {
+    $('.modal-title').text('Habitación: '+codigo);
+    $('.modal-title').data('codhab', codigo);
+    $('.modal-body').load('vista_habilitar', {data: codigo});
+    $('#save_chk_in_out').text('Habilitar Habitacion');
+    $('#save_chk_in_out').data('chkinout','chkhab');
   }
 });
 

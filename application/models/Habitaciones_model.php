@@ -117,6 +117,7 @@ class Habitaciones_model extends CI_Model{
 		foreach ($clientes as $key) {
 			$datos_cliente = json_decode($key);
 			$ql = $this->db->select('id_clientes')->from('clientes')->where('nit_cliente',$datos_cliente->nit_cliente)->get();
+			echo $ql->num_rows(); 
 			if( $ql->num_rows() > 0 ) {
 				$lista_clientes[] = $ql->row()->id_clientes;
 			} else {
@@ -186,7 +187,21 @@ class Habitaciones_model extends CI_Model{
 		$datos = json_decode($dato);
 		$query = $this->db->query("UPDATE kardex_hab SET obs = '$datos->observaciones', adelanto = '$datos->adelanto' where cod_hab = '$datos->cod_hab'");
 		return $query;
-	}	
+	}
+
+	public function buscar_habitacion($hab=''){
+		$habitacion = $this->db->query("SELECT h.id_habitacion, h.piso_hab, h.codigo,
+									(select t.descripcion 
+										from tipo_habitacion t 
+										where t.id_tipo_hab = h.id_tipo_hab) as descripcion,
+									(select t.costo 
+										from tipo_habitacion t 
+										where t.id_tipo_hab = h.id_tipo_hab) as costo, 
+									h.estado, 
+									IFNULL((select k.obs from kardex_hab k where k.cod_hab = h.codigo and k.vigente = 1),'') as obs 
+									FROM `habitaciones` h WHERE codigo like '%$hab%'");
+		return $habitacion->result();
+	}
 
 	public function detalle_libres(){
 		$query = $this->db->query("SELECT * FROM habitaciones WHERE estado = 'libre' or estado = 'limpio'");

@@ -4,7 +4,7 @@
 			<?php
 				foreach ($pisos as $key) {
 			?>
-			<button class="btn btn-primary" id="rep_hab_camarera" data-piso = "<?=$key->piso_hab;?>">Piso <span class="badge"><?=$key->piso_hab;?></span> #hab.: <?=$key->num_hab;?></button>
+			<button class="btn btn-primary" id="rep_hab_camarera" data-piso = "<?=$key->piso_hab;?>">Piso <span class="badge"><?=$key->piso_hab;?></span> <?=$key->num_hab;?> habs.</button>
 			<?php } ?>
 		</caption>
 		<thead>

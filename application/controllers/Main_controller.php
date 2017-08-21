@@ -424,6 +424,8 @@ class Main_controller extends CI_Controller {
             {
             	$fch = date_create($this->input->post('fch_reserva'));
             	$fch = date_format($fch, 'Y-m-d');
+            	$fch_salida = date_create($this->input->post('fch_salida'));
+            	$fch_salida = date_format($fch_salida, 'Y-m-d');
             	$id = $this->input->post('id_hab');
 				// $data = array(
 				// 	'id_habitacion' => $this->input->post('id_hab'),
@@ -438,6 +440,9 @@ class Main_controller extends CI_Controller {
 					'estado'		=> 'Reservado',
 					'fch_reserva'  	=> $fch,
 					'hr_reserva'	=> $this->input->post('hr_reserva'),
+					'fch_salida'  	=> $fch_salida,
+					'hr_salida'		=> $this->input->post('hr_salida'),
+					'obs'			=> $this->input->post('obs_reserva')
 				);
             	$nueva_reserva = $this->Habitaciones_model->guardaReserva($id, $data);
             	$status = 'OK';
@@ -554,6 +559,18 @@ class Main_controller extends CI_Controller {
 			$dato = $_POST['data'];
 			$cambia_estado_hab = $this->Habitaciones_model->cambia_estado_hab($dato);
 			echo $cambia_estado_hab;
+		} else{
+			redirect('main/restringido');
+		}
+	}
+
+	public function buscar_habitacion(){
+		if ($this->session->userdata('is_logged_in')) {
+			$habitacion = $_POST['data'];
+			$data['pisos'] = $this->Habitaciones_model->pisos_hab();
+			$data['habitaciones'] = $this->Habitaciones_model->buscar_habitacion($habitacion);
+			$data['reservadas'] = $this->Habitaciones_model->lista_hab_reservadas('Reservado');
+			$this->load->view('habitaciones_view', $data);
 		} else{
 			redirect('main/restringido');
 		}

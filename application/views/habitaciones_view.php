@@ -1,5 +1,5 @@
 <!-- *** Modal para Edicion de Conf Habitación *** -->
-<div class="modal fade" id="modal_chk_in_out" role="dialog" aria-labelledby="modal_chk_in_out">
+<div class="modal fade" data-backdrop="static" id="modal_chk_in_out" role="dialog" aria-labelledby="modal_chk_in_out">
   <div class="modal-dialog" role="document" style="width: 55%;">
     <div class="modal-content">
       <div class="modal-header">
@@ -19,7 +19,7 @@
 </div>
 <!-- *** FIN venta modal para Edicion de Conf de Habitación *** -->
 <!-- *** Modal para Fecha de Reserva *** -->
-<div class="modal fade" id="modal_reserva_mantenimiento" role="dialog" aria-labelledby="modal_reserva_mantenimiento">
+<div class="modal fade" data-backdrop="static" id="modal_reserva_mantenimiento" role="dialog" aria-labelledby="modal_reserva_mantenimiento">
   <div class="modal-dialog" role="document" style="width: 55%;">
     <div class="modal-content">
       <div class="modal-header">
@@ -28,7 +28,6 @@
       </div>
 
       <div class="modal-body">
-
         ...
       </div>
       <div class="modal-footer">
@@ -70,12 +69,12 @@
 	          </ul>
 	        </li>
 	      </ul>
-	      <form class="navbar-form navbar-left">
-	        <div class="form-group">
-	          <input type="text" class="form-control" placeholder="Habitación">
+	      <!-- <form class="navbar-form navbar-left"> -->
+	        <div class="navbar-form navbar-left form-group">
+	          <input type="text" class="form-control" placeholder="Habitación" name="buscar_habitacion" id="buscar_habitacion">
 	        </div>
-	        <button type="submit" class="btn btn-default">Buscar</button>
-	      </form>
+	        <!-- <button type="submit" class="btn btn-default">Buscar</button> -->
+	      <!-- </form> -->
 	      <ul class="nav navbar-nav navbar-right">
 	        <li class="dropdown">
 	          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Reportes <span class="caret"></span></a>
@@ -92,6 +91,7 @@
 	            <li><a class="btn btn-danger" href="#" id="busqueda_habs_estado" data-hab_estado = "ocupado">Ocupadas</a></li>
 	            <li role="separator" class="divider"></li>
 	            <li><a class="btn btn-warning" href="#" id="busqueda_habs_estado" data-hab_estado = "mantesucio">Mante/Sucio</a></li>
+	            <li><a class="btn btn-warning" href="#" id="busqueda_habs_estado" data-hab_estado = "alquilado">Alquilado</a></li>
 	          </ul>
 	        </li>
 	      </ul>
@@ -166,8 +166,16 @@
 					     <li><a href="#" id="chg_mantenimiento" data-codigo = "<?=$key->codigo;?>" data-idhab = "<?=$key->id_habitacion;?>" data-toggle="modal" data-target="#modal_reserva_mantenimiento">Mantenimiento</a></li>
 					  </ul>
 					</div>
-				<?php	}
-					?>
+				<?php	} elseif ($key->estado == 'Reservado') { ?>
+					<div class="btn-group">
+					  <button class="btn btn-default btn-xs dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" id="chg_estado_hab">
+					    ... <span class="caret"></span>
+					  </button>
+					  <ul class="dropdown-menu">
+					     <li><a href="#" id="chg_liberar" data-codigo = "<?=$key->codigo;?>" data-idhab = "<?=$key->id_habitacion;?>" data-toggle="modal" data-target="#modal_chk_in_out">Liberar</a></li>
+					  </ul>
+					</div>
+				<?php } ?>
 			</div>
 			<div class="panel-body" data-container="body" data-toggle="popover" data-html="true" tabindex="0" title="Observaciones de la Habitacion" data-content="<?=$key->obs;?>">
 			   <table class="table">
@@ -196,7 +204,8 @@
 				<tr>
 					<th>Hab.</th>
 					<th>Cliente</th>
-					<th>Fecha</th>
+					<th>Fecha In</th>
+					<th>Fecha Out</th>
 				</tr>
 			</thead>
 			<tbody>
@@ -205,6 +214,7 @@
 					<td><?=$key->codigo;?></td>
 					<td><?=$key->obs;?></td>
 					<td><?=$key->fch_reserva;?></td>
+					<td><?=$key->fch_salida;?></td>
 				</tr>
 				<?php } ?>
 			</tbody>
